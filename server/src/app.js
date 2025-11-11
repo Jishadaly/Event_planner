@@ -6,6 +6,7 @@ const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const authRoutes = require('./routes/auth.routes');
+const eventRoutes = require('./routes/event.route')
 const errorHandler = require('./middlewares/error.middleware');
 const AppError = require('./utils/AppError');
 
@@ -58,6 +59,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/event',eventRoutes)
 
 // Handle undefined routes
 app.all('*', (req, res, next) => {

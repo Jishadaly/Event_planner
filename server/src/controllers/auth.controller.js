@@ -3,6 +3,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 const { createSendToken } = require('../utils/jwt');
 const { sendWelcomeEmail } = require('../services/email.service');
+const { createDoc, findOne } = require('../utils/db.utils');
 
 /**
  * @desc    Register new user
@@ -14,18 +15,19 @@ exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
   // Check if user already exists
-  const existingUser = await User.findOne({ email });
+  console.log(User)
+  const existingUser = await findOne(User, { email })
   if (existingUser) {
     return next(new AppError('Email already in use', 400));
   }
 
   // Create new user
-  const user = await User.create({
+  const user = await createDoc(User, {
     name,
     email,
     password,
     role: role || 'participant',
-  });
+  })
 
   // Send welcome email (non-blocking)
   sendWelcomeEmail(user).catch((err) =>
@@ -50,7 +52,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   }
 
   // Check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  const user = await findOne(User, email)
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect password', 401));

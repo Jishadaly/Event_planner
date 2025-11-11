@@ -7,6 +7,7 @@ exports.validateEvent = (req, res, next) => {
   const { title, description, category, startTime, endTime, location } = req.body;
 
   const errors = [];
+  console.log(req.body)
 
   // Validate required fields for creation
   if (req.method === 'POST') {
@@ -61,6 +62,52 @@ exports.validateEvent = (req, res, next) => {
 
   next();
 };
+
+
+exports.validateFiles = (req, res, next) => {
+  const image = req.files?.image?.[0];
+  const attachments = req.files?.attachments || [];
+
+  const allowedImageTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+  const allowedFileTypes = [
+    ...allowedImageTypes,
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ];
+
+  const maxImageSize = 2 * 1024 * 1024; // 2MB
+  const maxFileSize = 10 * 1024 * 1024; // 10MB
+
+  const errors = [];
+
+  // 🔹 Validate image (optional, but check if provided)
+  if (image) {
+    if (!allowedImageTypes.includes(image.mimetype)) {
+      errors.push('Only JPEG, JPG, or PNG images allowed for event image.');
+    }
+    if (image.size > maxImageSize) {
+      errors.push('Event image must not exceed 2MB.');
+    }
+  }
+
+  // 🔹 Validate attachments (optional)
+  attachments.forEach((file) => {
+    if (!allowedFileTypes.includes(file.mimetype)) {
+      errors.push(`File ${file.originalname} has an unsupported format.`);
+    }
+    if (file.size > maxFileSize) {
+      errors.push(`File ${file.originalname} exceeds 10MB limit.`);
+    }
+  });
+
+  if (errors.length > 0) {
+    return next(new AppError(errors.join(' '), 400));
+  }
+
+  next();
+};
+
 
 /**
  * Validate user registration

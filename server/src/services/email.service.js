@@ -29,7 +29,7 @@ const sendEmail = async (options) => {
 
 
 //Send welcome email
-exports.sendWelcomeEmail = async (user) => {
+const sendWelcomeEmail = async (user) => {
   await sendEmail({
     to: user.email,
     subject: 'Welcome to Event Planner!',
@@ -43,4 +43,5 @@ exports.sendWelcomeEmail = async (user) => {
 
 module.exports = {
   sendEmail,
+  sendWelcomeEmail
 };
