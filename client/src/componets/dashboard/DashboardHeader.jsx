@@ -40,7 +40,7 @@ export default function DashboardHeader() {
                 <div className="flex items-center justify-between">
                     {/* Left: Logo & Title */}
                     <div className="flex items-center gap-4">
-                       <Logo to="/dashboard"/>
+                        <Logo to="/dashboard" />
 
                         <div className="hidden sm:block">
                             <h1 className="text-2xl font-bold">{activeRoute.title}</h1>
@@ -49,7 +49,7 @@ export default function DashboardHeader() {
                     </div>
 
                     {/* Right: Actions */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                         {isDashboardPage ? (
                             <Link to="/events">
                                 <Button variant="outline" size="sm">
@@ -66,7 +66,9 @@ export default function DashboardHeader() {
                         )}
 
                         <NotificationsPanel />
-                        <ThemeToggle/>
+                        <Button variant="ghost" size="sm">
+                            <ThemeToggle />
+                        </Button>
                         <Button variant="ghost" size="sm">
                             <LogOut className="h-4 w-4" />
                         </Button>

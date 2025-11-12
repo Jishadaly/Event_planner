@@ -17,13 +17,10 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     try {
       await loginSchema.validate(formData, { abortEarly: false })
       setErrors({})
       setIsLoading(true)
-
-      // Simulate API call
       console.log("Login attempt:", formData)
       await new Promise((resolve) => setTimeout(resolve, 1000))
     } catch (err) {

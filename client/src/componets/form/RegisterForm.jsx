@@ -3,6 +3,10 @@ import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
 import { Input } from "../ui/Input"
 import { registerSchema } from "../../validations/registerValidation"
+import { useDispatch } from "react-redux"
+import { registerUser } from "../../global/authSlice"
+import NotificationToast from "../notification/NotificationToast"
+import { useToast } from "../../context/ToastContext"
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +18,8 @@ export default function RegisterForm() {
   })
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+  const { showToast } = useToast()
 
   const validateForm = async () => {
     try {
@@ -47,8 +53,13 @@ export default function RegisterForm() {
     setIsLoading(true)
     try {
       console.log("Register attempt:", formData)
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-      // Navigate to dashboard or login
+
+      // const response = await dispatch(registerUser(formData)).unwrap()
+      showToast(
+        "success",
+        "Profile Updated",
+        "Your profile information has been saved ✅"
+      )
     } catch {
       setErrors((prev) => ({ ...prev, submit: "Registration failed. Please try again." }))
     } finally {

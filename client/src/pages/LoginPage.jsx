@@ -1,5 +1,6 @@
 
 
+import { Link } from "react-router-dom"
 import LoginForm from "../componets/form/LoginForm"
 import Header from "../componets/landing/Header"
 import ThemeToggle from "../componets/ui/ThemeToggle"
@@ -26,9 +27,9 @@ export default function LoginPage() {
       {/* Footer */}
       <div className="mt-6 text-center text-sm text-muted-foreground">
         Don't have an account?{" "}
-        <a href="/register" className="text-primary hover:underline font-medium">
+        <Link to="/register" className="text-primary hover:underline font-medium">
           Sign up here
-        </a>
+        </Link>
       </div>
     </div>
     // </div>

@@ -33,7 +33,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   sendWelcomeEmail(user).catch((err) =>
     console.error('Failed to send welcome email:', err)
   );
-
+  
   // Send token response
   createSendToken(user, 201, res);
 });
