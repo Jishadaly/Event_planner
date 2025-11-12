@@ -1,11 +1,10 @@
-"use client"
-
 import { Link, useLocation } from "react-router-dom"
 import { Button } from "../ui/Button"
 import { LogOut } from "lucide-react"
 import { LayoutDashboard } from "lucide-react"
 import NotificationsPanel from "../notification/NotificationPanel"
-import ThemeToggle from "../ThemeToggle"
+import ThemeToggle from "../ui/ThemeToggle"
+import Logo from "../ui/Logo"
 
 export default function DashboardHeader() {
     const location = useLocation()
@@ -41,12 +40,7 @@ export default function DashboardHeader() {
                 <div className="flex items-center justify-between">
                     {/* Left: Logo & Title */}
                     <div className="flex items-center gap-4">
-                        <Link to="/" className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-                                E
-                            </div>
-                            <span className="font-semibold hidden sm:inline">EventHub</span>
-                        </Link>
+                       <Logo to="/dashboard"/>
 
                         <div className="hidden sm:block">
                             <h1 className="text-2xl font-bold">{activeRoute.title}</h1>

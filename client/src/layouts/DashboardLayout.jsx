@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom"
 import DashboardHeader from "../componets/dashboard/DashboardHeader"
 import { useState } from "react"
+import Footer from "../componets/landing/Footer"
 
 export default function DashboardLayout() {
     const user = JSON.parse(localStorage.getItem("user"))
@@ -18,9 +19,7 @@ export default function DashboardLayout() {
                 <Outlet />
             </main>
 
-            <footer className="p-4 text-center text-muted-foreground text-sm border-t border-border">
-                Dashboard © EventHub
-            </footer>
+            <Footer/>
         </div>
     )
 }

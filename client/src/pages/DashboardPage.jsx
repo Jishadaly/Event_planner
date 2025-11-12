@@ -8,7 +8,7 @@ import OrganizerDashboard from "../componets/dashboard/OrganizerDashboard"
 
 
 export default function DashboardPage() {
-    const [userRole, setUserRole] = useState("participant")
+    const [userRole, setUserRole] = useState("admin")
 
     return (
         <div className="min-h-screen bg-background">

@@ -2,12 +2,14 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
+import { getToday } from "../../utils/formateDate"
 
 export default function CalendarSection() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
 
   const daysInMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0).getDate()
   const firstDayOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay()
+  const { today, month, year } = getToday()
 
   // Mock events
   const eventsByDate = {
@@ -77,9 +79,13 @@ export default function CalendarSection() {
           return (
             <div
               key={idx}
-              className={`aspect-square rounded-lg border border-border p-1 text-xs ${
-                day ? "cursor-pointer hover:bg-muted/50" : "bg-muted/20"
-              }`}
+              className={`aspect-square rounded-lg border border-border p-1 text-xs ${day ? "cursor-pointer hover:bg-muted/50" : "bg-muted/20"
+                } ${day &&
+                  (currentMonth.getMonth() === month &&
+                    currentMonth.getFullYear() === year &&
+                    day === today) ?
+                  "bg-primary/90  hover:bg-primary/50 font-bold" : ""
+                } `}
             >
               {day && (
                 <div className="h-full flex flex-col">

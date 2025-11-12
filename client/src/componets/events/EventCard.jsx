@@ -23,7 +23,7 @@ export default function EventCard({ event }) {
 
   return (
     <Link to={`/events/${event.id}`}>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
+      <Card className="overflow-hidden hover:border-primary/70 transition-shadow cursor-pointer h-full flex flex-col">
         {/* Image */}
         <div className="relative h-40 w-full bg-muted overflow-hidden">
           <img

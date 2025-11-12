@@ -28,3 +28,14 @@ export function formatDate(date) {
     return new Date(date).toLocaleDateString("en-US", { weekday: "long" })
   }
   
+  // utils/date.js
+
+export function getToday() {
+  const today = new Date()
+  return {
+    today: today.getDate(),
+    month: today.getMonth(), // 0-indexed: 0 = Jan
+    year: today.getFullYear(),
+    iso: today.toISOString(), // Full ISO string
+  }
+}

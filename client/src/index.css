@@ -12,8 +12,9 @@
         --popover-foreground: 0 0% 10%;
         --muted: 0 0% 96%;
         --muted-foreground: 0 0% 45%;
-        --accent:  263.37 71.4% 55%;
-        --accent-foreground: 0 0% 100%;
+        /* --accent:  263.37 71.4% 55%; */
+        --accent:  0 0% 95%;
+        --accent-foreground: 0 0% 0%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 100%;
         --border: 0 0% 90%;
@@ -35,7 +36,8 @@
         --popover-foreground: 0 0% 95%;
         --muted: 0 0% 15%;
         --muted-foreground: 0 0% 65%;
-        --accent: 263.37 71.4% 55%;
+        /* --accent: 263.37 71.4% 55%; */
+        --accent:  0 0% 15%;
         --accent-foreground: 0 0% 100%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 10%;
@@ -43,7 +45,7 @@
         --input: 0 0% 15%;
         --ring: 200 100% 50%;
         --primary: 263.37 71.4% 55%;
-        --primary-foreground: 0 0% 100%;
+        --primary-foreground: 0 0% 70%;
         --secondary: 0 0% 20%;
         --secondary-foreground: 0 0% 90%;
     }
@@ -57,4 +59,8 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+html {
+    scroll-behavior: smooth;
 }

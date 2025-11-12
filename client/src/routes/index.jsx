@@ -6,6 +6,7 @@ import DashboardPage from "../pages/DashboardPage"
 import DashboardLayout from "../layouts/DashboardLayout"
 import EventsListingPage from "../pages/EventsPage"
 import EventDetailsPage from "../pages/EventDetailPage"
+import Home from "../pages/LandingPage"
 // import AuthLayout from "@/layouts/AuthLayout"
 // import DashboardLayout from "@/layouts/DashboardLayout"
 // import OrganizerDashboard from "@/pages/dashboard/OrganizerDashboard"
@@ -19,6 +20,7 @@ export default function AppRoutes() {
     return (
         <Routes>
             {/* Public pages */}
+            <Route path="/" element={<Home/>}/>
             <Route element={<MainLayout />}>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
