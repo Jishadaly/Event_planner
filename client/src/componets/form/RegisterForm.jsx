@@ -1,14 +1,20 @@
 import { useState } from "react"
 import { Button } from "../ui/Button"
 import { Card } from "../ui/Card"
-import { Input } from "../ui/Input"
-import { registerSchema } from "../../validations/registerValidation"
 import { useDispatch } from "react-redux"
-import { registerUser } from "../../global/authSlice"
-import NotificationToast from "../notification/NotificationToast"
+import { registerUser } from "../../global/authServices"
+import { registerSchema } from "../../validations/registerValidation"
 import { useToast } from "../../context/ToastContext"
+import { useFormValidation } from "../../hooks/useFormValidator"
+import { InputField } from "./InputField"
+import { FormError } from "../ui/FormError"
 
 export default function RegisterForm() {
+  const dispatch = useDispatch()
+  const { showToast } = useToast()
+  const { errors, validate, clearError } = useFormValidation(registerSchema)
+  const [isLoading, setIsLoading] = useState(false)
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -16,52 +22,32 @@ export default function RegisterForm() {
     confirmPassword: "",
     role: "participant",
   })
-  const [errors, setErrors] = useState({})
-  const [isLoading, setIsLoading] = useState(false)
-  const dispatch = useDispatch()
-  const { showToast } = useToast()
 
-  const validateForm = async () => {
-    try {
-      await registerSchema.validate(formData, { abortEarly: false })
-      setErrors({})
-      return true
-    } catch (validationError) {
-      const newErrors = {}
-      validationError.inner.forEach((err) => {
-        newErrors[err.path] = err.message
-      })
-      setErrors(newErrors)
-      return false
-    }
-  }
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }))
-    }
+    clearError(name)
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const isValid = await validateForm()
+    const isValid = await validate(formData)
     if (!isValid) return
 
     setIsLoading(true)
     try {
-      console.log("Register attempt:", formData)
+      const payload = { ...formData, name: formData.fullName }
+      delete payload.fullName
 
-      // const response = await dispatch(registerUser(formData)).unwrap()
-      showToast(
-        "success",
-        "Profile Updated",
-        "Your profile information has been saved ✅"
-      )
-    } catch {
-      setErrors((prev) => ({ ...prev, submit: "Registration failed. Please try again." }))
+      const res = await dispatch(registerUser(payload)).unwrap()
+      console.log(res)
+      showToast("success", "Registration Successful", "Your account has been created")
+      navigate("/dashboard", { replace: true });
+    } catch (err) {
+      console.log(err, "cachedd")
+      showToast("error", "Registration Failed", err.message || "Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -70,77 +56,50 @@ export default function RegisterForm() {
   return (
     <Card className="p-6">
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Full Name */}
-        <div>
-          <label htmlFor="fullName" className="block text-sm font-medium mb-1">
-            Full Name
-          </label>
-          <Input
-            id="fullName"
-            name="fullName"
-            type="text"
-            placeholder="John Doe"
-            value={formData.fullName}
-            onChange={handleChange}
-            className={errors.fullName ? "border-destructive" : ""}
-          />
-          {errors.fullName && <p className="text-sm text-destructive mt-1">{errors.fullName}</p>}
-        </div>
+        {/** Full Name */}
+        <InputField
+          label="Full Name"
+          id="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          error={errors.fullName}
+          placeholder="John Doe"
+        />
 
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
-          </label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="you@example.com"
-            value={formData.email}
-            onChange={handleChange}
-            className={errors.email ? "border-destructive" : ""}
-          />
-          {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
-        </div>
+        {/** Email */}
+        <InputField
+          label="Email"
+          id="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+          type="email"
+          placeholder="you@example.com"
+        />
 
-        {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            Password
-          </label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="••••••••"
-            value={formData.password}
-            onChange={handleChange}
-            className={errors.password ? "border-destructive" : ""}
-          />
-          {errors.password && <p className="text-sm text-destructive mt-1">{errors.password}</p>}
-        </div>
+        {/** Password */}
+        <InputField
+          label="Password"
+          id="password"
+          value={formData.password}
+          onChange={handleChange}
+          error={errors.password}
+          type="password"
+          placeholder="••••••••"
+        />
 
-        {/* Confirm Password */}
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">
-            Confirm Password
-          </label>
-          <Input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            placeholder="••••••••"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className={errors.confirmPassword ? "border-destructive" : ""}
-          />
-          {errors.confirmPassword && (
-            <p className="text-sm text-destructive mt-1">{errors.confirmPassword}</p>
-          )}
-        </div>
+        {/** Confirm Password */}
+        <InputField
+          label="Confirm Password"
+          id="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          error={errors.confirmPassword}
+          type="password"
+          placeholder="••••••••"
+        />
 
-        {/* Role */}
+        {/** Role */}
         <div>
           <label htmlFor="role" className="block text-sm font-medium mb-1">
             I want to
@@ -157,17 +116,14 @@ export default function RegisterForm() {
           </select>
         </div>
 
-        {/* Error */}
         {errors.submit && (
-          <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md">{errors.submit}</div>
+          <FormError children={errors.submit} className="p-3 bg-destructive/10 text-destructive text-sm rounded-md" />
         )}
 
-        {/* Submit */}
         <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90">
           {isLoading ? "Creating account..." : "Create Account"}
         </Button>
 
-        {/* Terms */}
         <p className="text-xs text-muted-foreground text-center">
           By signing up, you agree to our{" "}
           <a href="#" className="text-primary hover:underline">

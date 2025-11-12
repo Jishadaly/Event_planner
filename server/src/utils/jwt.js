@@ -1,42 +1,32 @@
 const jwt = require('jsonwebtoken');
 
-/**
- * Generate JWT token
- * @param {string} id - User ID
- * @returns {string} JWT token
- */
-exports.signToken = (id) => {
+const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 };
 
-/**
- * Create and send token response
- * @param {Object} user - User object
- * @param {number} statusCode - HTTP status code
- * @param {Object} res - Express response object
- */
 exports.createSendToken = (user, statusCode, res) => {
-  const token = this.signToken(user._id);
+  const token = signToken(user._id);
 
-  // Remove password from output
-  user.password = undefined;  
+  const cookieOptions = {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  };
 
+  res.cookie("token", token, cookieOptions);
+
+  user.password = undefined;
+
+  // Optionally send user data (without token)
   res.status(statusCode).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
+    status: "success",
+    user,
   });
 };
 
-/**
- * Verify JWT token
- * @param {string} token - JWT token
- * @returns {Object} Decoded token
- */
 exports.verifyToken = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
 };

@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth.routes');
 const eventRoutes = require('./routes/event.route')
 const errorHandler = require('./middlewares/error.middleware');
 const AppError = require('./utils/AppError');
+const cookieParser = require("cookie-parser")
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api', limiter);
 // Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser)
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());

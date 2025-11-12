@@ -46,7 +46,6 @@ export function ToastProvider({ children, position = "top-right", motion = "smoo
 }
 
 //helper fn
-
 function getPositionClasses(position) {
     const map = {
         "top-left": "top-4 left-4",

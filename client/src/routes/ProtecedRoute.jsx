@@ -1,8 +1,9 @@
-import { Navigate } from "react-router-dom"
+import { Navigate, Outlet } from "react-router-dom"
+import Cookies from 'js-cookie'
 
-export default function ProtectedRoute({ children }) {
-  const user = JSON.parse(localStorage.getItem("user")) // { role, token, ... }
-
-  if (!user) return <Navigate to="/" replace />
-  return children
+export default function ProtectedRoute() {
+  const token = Cookies.get("token")
+  console.log(token,"token")
+  if (!token) return <Navigate to="/login" replace />
+  return <Outlet/>
 }

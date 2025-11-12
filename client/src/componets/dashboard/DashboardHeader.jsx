@@ -1,14 +1,19 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Button } from "../ui/Button"
 import { LogOut } from "lucide-react"
 import { LayoutDashboard } from "lucide-react"
 import NotificationsPanel from "../notification/NotificationPanel"
 import ThemeToggle from "../ui/ThemeToggle"
 import Logo from "../ui/Logo"
+import { useDispatch } from "react-redux"
+import { logout } from "../../global/authSlice"
+import Cookies from "js-cookie"
 
 export default function DashboardHeader() {
     const location = useLocation()
     const path = location.pathname
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const roleLabel = {
         admin: "Admin Dashboard",
@@ -33,6 +38,12 @@ export default function DashboardHeader() {
         { title: "EventHub", subtitle: "Your all-in-one event platform" }
 
     const isDashboardPage = path.includes("/dashboard")
+    
+    const handleLogout = () => {
+        Cookies.remove("token")
+        dispatch(logout())
+        navigate('/login')
+    }
 
     return (
         <header className="bg-background border-b border-border">
@@ -66,10 +77,8 @@ export default function DashboardHeader() {
                         )}
 
                         <NotificationsPanel />
-                        <Button variant="ghost" size="sm">
-                            <ThemeToggle />
-                        </Button>
-                        <Button variant="ghost" size="sm">
+                        <ThemeToggle />
+                        <Button variant="ghost" size="sm" onClick={handleLogout} >
                             <LogOut className="h-4 w-4" />
                         </Button>
                     </div>
