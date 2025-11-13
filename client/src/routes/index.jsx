@@ -22,9 +22,9 @@ export default function AppRoutes() {
   return (
     <Routes>
       {/* Public pages */}
+          <Route path="/" element={<Home />} />
       <Route element={<MainLayout />}>
         <Route element={<PublicOnlyRoute />}>
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>

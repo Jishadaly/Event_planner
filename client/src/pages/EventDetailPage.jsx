@@ -8,6 +8,7 @@ import AttachmentsSection from "../componets/events/AttachmentSection"
 import { Button } from "../componets/ui/Button"
 import { Card } from "../componets/ui/Card"
 import { useParams } from "react-router-dom"
+import Modal from "../componets/ui/Modal"
 
 // Mock event data (for demo)
 const mockEvent = {
@@ -106,9 +107,9 @@ export default function EventDetailsPage() {
             </div> */}
 
             {/* Main Content */}
-            
+
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                
+
                 <div className="grid gap-8 lg:grid-cols-3">
                     {/* Left Column - Event Details */}
                     <div className="lg:col-span-2 space-y-6">
@@ -225,29 +226,24 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
 
-                        {isJoined && showChat &&  <Card className="p-6 sticky top-24"> <EventChat eventId={event.id} /> </Card> }
+                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event.id} /> </Card>}
                     </div>
                 </div>
 
                 {/* Participants Modal */}
-                {showParticipants && (
-                    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-                        <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
-                            <div className="p-6">
-                                <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-xl font-semibold">Event Participants</h3>
-                                    <button
-                                        onClick={() => setShowParticipants(false)}
-                                        className="text-muted-foreground hover:text-foreground"
-                                    >
-                                        ✕
-                                    </button>
-                                </div>
-                                <ParticipantsSection participants={event.participants || []} expandedView={true} />
+
+
+                <Modal isOpen={showParticipants} onClose={() => setShowParticipants(false)}>
+                    <Card className="w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-semibold">Event Participants</h3>
                             </div>
-                        </Card>
-                    </div>
-                )}
+                            <ParticipantsSection participants={event.participants || []} expandedView={true} />
+                        </div>
+                    </Card>
+                </Modal>
+
             </div>
         </div>
     )

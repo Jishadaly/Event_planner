@@ -10,11 +10,13 @@ const { uploadToCloudinary } = require('../utils/cloudinary');
 exports.getAllEvents = asyncHandler(async (req, res, next) => {
     const result = await eventService.getAllEvents(req.query);
 
+    console.log(result,"ress")
+
     res.status(200).json({
         status: 'success',
         results: result.events.length,
         pagination: result.pagination,
-        data: {
+        events: {
             events: result.events,
         },
     });

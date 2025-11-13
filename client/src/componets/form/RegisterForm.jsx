@@ -8,12 +8,14 @@ import { useToast } from "../../context/ToastContext"
 import { useFormValidation } from "../../hooks/useFormValidator"
 import { InputField } from "./InputField"
 import { FormError } from "../ui/FormError"
+import { useNavigate } from "react-router-dom"
 
 export default function RegisterForm() {
   const dispatch = useDispatch()
   const { showToast } = useToast()
   const { errors, validate, clearError } = useFormValidation(registerSchema)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     fullName: "",

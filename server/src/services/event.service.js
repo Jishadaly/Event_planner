@@ -6,13 +6,17 @@ const { updateById, findById, createDoc } = require('../utils/db.utils');
  * Get all events with filters and pagination
  */
 exports.getAllEvents = async (queryParams) => {
-    const { status, search, page = 1, limit = 10, sortBy = '-startTime' } = queryParams;
+    const { status, search, page = 1, limit = 10, sortBy = '-startTime', category } = queryParams;
     console.log(queryParams)
     // Build query
     const query = {};
 
     if (status && status !== 'all') {
         query.status = status;
+    }
+
+    if (category && category !== 'all') {
+        query.category = category;
     }
 
     if (search) {
@@ -60,7 +64,7 @@ exports.getEventById = async (id) => {
  * Create new event
  */
 exports.createEvent = async (eventData, userId) => {
-    console.log(eventData,'event data')
+    console.log(eventData, 'event data')
     const event = await createDoc(Event, {
         ...eventData,
         organizer: userId,

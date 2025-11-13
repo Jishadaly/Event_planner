@@ -24,12 +24,12 @@ export default function Header() {
                 {/* Auth Buttons */}
                 <div className="flex items-center gap-2">
                     <ThemeToggle />
-                    <Link href="/login">
+                    <Link to="/login">
                         <Button variant="ghost" size="sm">
                             Login
                         </Button>
                     </Link>
-                    <Link href="/register">
+                    <Link to="/register">
                         <Button size="sm" className="bg-primary hover:bg-primary/90">
                             Sign Up
                         </Button>

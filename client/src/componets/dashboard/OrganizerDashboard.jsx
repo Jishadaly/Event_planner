@@ -1,7 +1,7 @@
 "use client"
 
 import { Card } from "../ui/Card"
-import { Button } from "../ui/Button" 
+import { Button } from "../ui/Button"
 import {
   LineChart,
   Line,
@@ -15,6 +15,9 @@ import {
 } from "recharts"
 import { Plus, Calendar, Users, TrendingUp, Clock } from "lucide-react"
 import CalendarSection from "./CalenderSection"
+import { useState } from "react"
+import Modal from "../ui/Modal"
+import CreateEventForm from "../form/CreateEventForm"
 
 const mockOrganizerStats = {
   myEvents: 5,
@@ -38,6 +41,9 @@ const attendanceData = [
 ]
 
 export default function OrganizerDashboard() {
+
+  const [showCreateEvent, setShowCreateEvent] = useState(false)
+
   return (
     <div className="space-y-8">
       {/* Header with Create Button */}
@@ -46,7 +52,7 @@ export default function OrganizerDashboard() {
           <h1 className="text-3xl font-bold">My Events</h1>
           <p className="text-muted-foreground">Manage and monitor your events</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90">
+        <Button className="bg-primary hover:bg-primary/90" onClick={() => setShowCreateEvent(true)}>
           <Plus className="h-4 w-4 mr-2" />
           Create New Event
         </Button>
@@ -161,6 +167,13 @@ export default function OrganizerDashboard() {
           ))}
         </div>
       </Card>
+
+      {/* modal */}
+      <Modal isOpen={showCreateEvent} onClose={() => setShowCreateEvent(false)}>
+        <CreateEventForm onClose={()=> setShowCreateEvent(false)}/>
+      </Modal>
     </div>
+
+
   )
 }

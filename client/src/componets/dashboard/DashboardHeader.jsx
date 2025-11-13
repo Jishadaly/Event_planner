@@ -6,8 +6,9 @@ import NotificationsPanel from "../notification/NotificationPanel"
 import ThemeToggle from "../ui/ThemeToggle"
 import Logo from "../ui/Logo"
 import { useDispatch } from "react-redux"
-import { logout } from "../../global/authSlice"
 import Cookies from "js-cookie"
+import { logout } from "../../api/apiService"
+import { logout as logoutAction } from "../../global/authSlice"
 
 export default function DashboardHeader() {
     const location = useLocation()
@@ -40,8 +41,8 @@ export default function DashboardHeader() {
     const isDashboardPage = path.includes("/dashboard")
     
     const handleLogout = () => {
-        Cookies.remove("token")
-        dispatch(logout())
+        logout()
+        dispatch(logoutAction())
         navigate('/login')
     }
 

@@ -33,6 +33,8 @@ exports.register = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
+  console.log("loginnnnnn")
+
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));
   }
@@ -51,3 +53,13 @@ exports.login = asyncHandler(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie('sessionToken', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Use secure in production
+    expires: new Date(0), // Set the expiration date to the epoch (immediately expires)
+    sameSite: 'Strict',
+  });
+
+  res.status(200).json({ message: 'Logged out successfully' });
+})
