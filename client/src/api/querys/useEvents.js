@@ -3,28 +3,33 @@ import apiClient from "../../config/axiosInstance";
 
 
 export const useEvents = (filters) => {
-    const query = useQuery({
-      queryKey: ["events", filters],
-      queryFn: async () => {
-        const params = new URLSearchParams(filters);
-        console.log(params.toString())
-        const { data } = await apiClient.get(`/event?${params.toString()}`);
-        return data;
-      },
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
+    const { status, search, page, limit, sortBy, category } = filters;
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: ["events", status, search, page, limit, sortBy, category],
+        queryFn: async () => {
+            const params = new URLSearchParams();
+
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== undefined && value !== null && value !== "undefined") {
+                    params.append(key, value);
+                }
+            });
+
+
+            const { data } = await apiClient.get(`/event?${params.toString()}`);
+            return data;
+        },
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
     });
 
 
-  
     return {
-        events: query.data?.events || [],
-        pagination: query.data?.pagination,
-        isLoading: query.isLoading,
-        isError: query.isError,
-        refetchEvents: query.refetch,
-        error: query.error,
-      };
-      
-  };
-  
+        events: data?.events || [],
+        pagination: data?.pagination,
+        isLoading,
+        error,
+        refetch
+    };
+
+};

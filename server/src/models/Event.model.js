@@ -43,18 +43,21 @@ const eventSchema = new mongoose.Schema(
     },
     participants: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
-    attachments: [
-      {
-        name: { type: String },
-        url: { type: String },
-        type: { type: String },
-        size: { type: Number },
-        public_id: { type: String },
-      },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        status: {
+          type: String,
+          enum: ["joined", "interested", "left"],
+          default: "interested",
+        },
+        joinedAt: {
+          type: Date,
+          default: () => new Date(),
+        }
+      }
     ],
     image: {
       name: { type: String },
@@ -82,13 +85,13 @@ const eventSchema = new mongoose.Schema(
 );
 
 // Indexes for performance
-eventSchema.index({ title: 'text', description: 'text' });
+eventSchema.index({ title: 'text', description: 'text', location: 'text' });
 eventSchema.index({ startTime: 1 });
 eventSchema.index({ status: 1 });
 eventSchema.index({ organizer: 1 });
 
 // Update status based on time
-eventSchema.methods.updateStatus = function () {
+eventSchema.method.updateStatus = function () {
   const now = new Date();
   if (now < this.startTime) {
     this.status = 'upcoming';

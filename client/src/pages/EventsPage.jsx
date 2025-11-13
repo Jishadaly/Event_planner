@@ -1,92 +1,85 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../componets/ui/Button";
 import EventCard from "../componets/events/EventCard";
 import EventFilters from "../componets/events/EventFilters";
 import EventSearch from "../componets/events/EventSearch";
 import { useEvents } from "../api/querys/useEvents";
 import { Loader2 } from "lucide-react";
+import { useDebounce } from "../hooks/useHooks";
+import Pagination from "../componets/common/Pagination";
 
 export default function EventsListingPage() {
-  // Filters & Pagination state
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [page, setPage] = useState(1);
-  const limit = 6; // per page
+  const limit = 6;
 
-  // Query hook (fetch data)
-  const {
-    events,
-    isLoading,
-    isError,
-    refetch,
-    pagination
-  } = useEvents({
+  const debouncedSearch = useDebounce(searchQuery, 500)
+
+  const { events, isLoading, error, pagination } = useEvents({
     status: selectedStatus !== "All" ? selectedStatus : undefined,
-    search: searchQuery || undefined,
+    search: debouncedSearch || '',
     page,
     limit,
     sortBy: "-createdAt",
     category: selectedCategory !== "All" ? selectedCategory : undefined,
   });
 
-  console.log(events)
-  
-  
-
-  // Pagination Handlers
   const handleNext = () => {
-    if (page < totalPages) setPage((prev) => prev + 1);
+    if (page < pagination.pages) setPage((prev) => prev + 1);
   };
-
   const handlePrev = () => {
     if (page > 1) setPage((prev) => prev - 1);
   };
 
-  // UI Rendering
+
   return (
     <div className="min-h-screen bg-background">
 
-      {/* Filters + Search */}
+
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8 space-y-4">
           <EventSearch value={searchQuery} onChange={setSearchQuery} />
-          <EventFilters
-            selectedCategory={selectedCategory}
-            selectedStatus={selectedStatus}
-            onCategoryChange={setSelectedCategory}
-            onStatusChange={setSelectedStatus}
-          />
+
         </div>
 
-        {/* Loading & Error */}
         {isLoading && (
           <div className="flex justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
           </div>
         )}
 
-        {isError && (
+        {error && (
           <div className="rounded-lg border border-border bg-card p-12 text-center">
             <p className="text-lg font-medium text-destructive">Failed to load events</p>
             <p className="mt-2 text-muted-foreground">Please try again later</p>
           </div>
         )}
 
-        {/* Events Grid */}
-        {!isLoading && !isError && (
+        {!isLoading && !error && (
           <>
-            <div className="mb-6">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-5">
               <p className="text-sm text-muted-foreground">
                 Showing {events.length} of {pagination?.total || 0} events
               </p>
+
+              <EventFilters
+                selectedCategory={selectedCategory}
+                selectedStatus={selectedStatus}
+                onCategoryChange={setSelectedCategory}
+                onStatusChange={setSelectedStatus}
+              />
             </div>
+
 
             {events.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {events.map((event) => (
+
                   <EventCard key={event._id} event={event} />
+
                 ))}
               </div>
             ) : (
@@ -97,26 +90,8 @@ export default function EventsListingPage() {
             )}
 
             {/* Pagination */}
-            {pagination > 1 && (
-              <div className="flex items-center justify-center gap-4 mt-10">
-                <Button
-                  variant="outline"
-                  disabled={page === 1}
-                  onClick={handlePrev}
-                >
-                  ← Previous
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  Page {page} of {pagination.total}
-                </span>
-                <Button
-                  variant="outline"
-                  disabled={page === pagination.total}
-                  onClick={handleNext}
-                >
-                  Next →
-                </Button>
-              </div>
+            {pagination.pages > 1 && (
+              <Pagination page={page} pages={pagination.pages} onPrev={handlePrev} onNext={handleNext} />
             )}
           </>
         )}

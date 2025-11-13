@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { ArrowLeft, MapPin, Calendar, Clock, User, Users, MessageCircle, Badge } from "lucide-react"
+import { ArrowLeft, MapPin, Calendar, Clock, User, Users, MessageCircle } from "lucide-react"
 import { formatDateFull, formatTime } from "../utils/formateDate"
 import EventChat from "../componets/events/ChatSection"
 import ParticipantsSection from "../componets/events/ParticipantsSection"
@@ -9,6 +9,8 @@ import { Button } from "../componets/ui/Button"
 import { Card } from "../componets/ui/Card"
 import { useParams } from "react-router-dom"
 import Modal from "../componets/ui/Modal"
+import { useEvent } from "../api/querys/useEvent"
+import Badge from "../componets/ui/Badge"
 
 // Mock event data (for demo)
 const mockEvent = {
@@ -72,12 +74,16 @@ const mockEvent = {
 }
 
 export default function EventDetailsPage() {
-    const event = mockEvent
+    // const event = mockEvent
     const [isJoined, setIsJoined] = useState(false)
     const [showChat, setShowChat] = useState(false)
     const [showParticipants, setShowParticipants] = useState(false)
-
     const { id } = useParams()
+    const { event } = useEvent(id)
+
+    console.log(event, "event")
+
+
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -92,7 +98,7 @@ export default function EventDetailsPage() {
         }
     }
 
-    const joinedParticipants = event.participants?.filter((p) => p.status === "joined") || []
+    // const joinedParticipants = event?.participants?.filter((p) => "joined") || []
 
     return (
         <div className="min-h-screen bg-background">
@@ -115,9 +121,10 @@ export default function EventDetailsPage() {
                     <div className="lg:col-span-2 space-y-6">
                         {/* Image */}
                         <div className="relative h-96 w-full overflow-hidden rounded-lg">
-                            <img src={event.image || "/placeholder.svg"} alt={event.title} fill className="object-cover" />
-                            <Badge className={`absolute top-4 right-4 ${getStatusColor(event.status)}`}>
-                                {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                            <img src={event?.image?.url || "/placeholder.svg"} alt={event?.title} fill className="object-cover" />
+                            <Badge className={`absolute top-4 right-4 ${getStatusColor(event?.status)}`}>
+                                {event?.status.charAt(0).toUpperCase() + event?.status.slice(1)}
+                                
                             </Badge>
                         </div>
 
@@ -125,8 +132,8 @@ export default function EventDetailsPage() {
                         <div>
                             <div className="flex items-start justify-between gap-4 mb-3">
                                 <div>
-                                    <h1 className="text-3xl font-bold mb-2">{event.title}</h1>
-                                    <p className="text-lg text-muted-foreground">{event.category}</p>
+                                    <h1 className="text-3xl font-bold mb-2">{event?.title}</h1>
+                                    <p className="text-lg text-muted-foreground">{event?.category}</p>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +145,7 @@ export default function EventDetailsPage() {
                                     <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm text-muted-foreground">Date</p>
-                                        <p className="font-semibold">{formatDateFull(event.startTime)}</p>
+                                        <p className="font-semibold">{formatDateFull(event?.startTime)}</p>
                                     </div>
                                 </div>
                             </Card>
@@ -149,7 +156,7 @@ export default function EventDetailsPage() {
                                     <div>
                                         <p className="text-sm text-muted-foreground">Time</p>
                                         <p className="font-semibold">
-                                            {formatTime(event.startTime)} - {formatTime(event.endTime)}
+                                            {formatTime(event?.startTime)} - {formatTime(event?.endTime)}
                                         </p>
                                     </div>
                                 </div>
@@ -160,7 +167,7 @@ export default function EventDetailsPage() {
                                     <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm text-muted-foreground">Location</p>
-                                        <p className="font-semibold">{event.location}</p>
+                                        <p className="font-semibold">{event?.location}</p>
                                     </div>
                                 </div>
                             </Card>
@@ -170,7 +177,7 @@ export default function EventDetailsPage() {
                                     <User className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm text-muted-foreground">Organizer</p>
-                                        <p className="font-semibold">{event.organizer?.fullName}</p>
+                                        <p className="font-semibold">{event?.organizer?.name}</p>
                                     </div>
                                 </div>
                             </Card>
@@ -179,16 +186,16 @@ export default function EventDetailsPage() {
                         {/* Description */}
                         <Card className="p-6">
                             <h2 className="mb-4 text-xl font-semibold">About This Event</h2>
-                            <p className="text-muted-foreground leading-relaxed">{event.description}</p>
+                            <p className="text-muted-foreground leading-relaxed">{event?.description}</p>
                         </Card>
 
                         {/* Attachments */}
-                        {event.attachments && event.attachments.length > 0 && (
-                            <AttachmentsSection attachments={event.attachments} />
+                        {event?.attachments && event?.attachments.length > 0 && (
+                            <AttachmentsSection attachments={event?.attachments} />
                         )}
 
                         {/* Participants */}
-                        <ParticipantsSection participants={event.participants || []} />
+                        {/* <ParticipantsSection participants={event?.participants || []} /> */}
                     </div>
 
                     {/* Right Column */}
@@ -197,7 +204,7 @@ export default function EventDetailsPage() {
                             <div className="space-y-4">
                                 <div>
                                     <p className="text-sm text-muted-foreground mb-2">Participants</p>
-                                    <p className="text-2xl font-bold">{joinedParticipants.length}</p>
+                                    {/* <p className="text-2xl font-bold">{joinedParticipants.length}</p> */}
                                 </div>
 
                                 {!isJoined ? (
@@ -226,7 +233,7 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
 
-                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event.id} /> </Card>}
+                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} /> </Card>}
                     </div>
                 </div>
 
@@ -239,7 +246,7 @@ export default function EventDetailsPage() {
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-xl font-semibold">Event Participants</h3>
                             </div>
-                            <ParticipantsSection participants={event.participants || []} expandedView={true} />
+                            <ParticipantsSection participants={event?.participants || []} expandedView={true} />
                         </div>
                     </Card>
                 </Modal>

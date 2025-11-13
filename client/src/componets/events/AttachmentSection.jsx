@@ -23,8 +23,8 @@ export default function AttachmentsSection({ attachments }) {
                         <div className="flex items-center gap-3 min-w-0">
                             {getFileIcon(attachment.fileType)}
                             <div className="min-w-0">
-                                <p className="font-semibold text-sm truncate">{attachment.fileName}</p>
-                                <p className="text-xs text-muted-foreground">{attachment.uploadedAt.toLocaleDateString()}</p>
+                                <p className="font-semibold text-sm truncate">{attachment.name}</p>
+                                {/* <p className="text-xs text-muted-foreground">{attachment.uploadedAt.toLocaleDateString()}</p> */}
                             </div>
                         </div>
                         <Button

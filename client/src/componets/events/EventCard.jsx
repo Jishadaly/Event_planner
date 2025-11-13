@@ -1,13 +1,14 @@
 import Badge from "../ui/Badge"
 import { Users, MapPin, Calendar } from "lucide-react"
 import { formatTime, formatDate } from "../../utils/formateDate"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Card } from "../ui/Card"
 import { Button } from "../ui/Button"
 import { getStatusColor } from "../../utils/getStatus"
 
 export default function EventCard({ event }) {
   const participantCount = event?.participants?.length || 0
+  const navigate = useNavigate()
 
   return (
     <Link to={`/events/${event.id}`}>
@@ -76,7 +77,7 @@ export default function EventCard({ event }) {
           {/* CTA Button */}
           <Button
             className="w-full bg-primary hover:bg-primary/90"
-            onClick={(e) => e.preventDefault()}
+            onClick={(e) => navigate(`/events/${event.id}`)}
           >
             View Details
           </Button>

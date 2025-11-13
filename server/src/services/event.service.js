@@ -7,8 +7,8 @@ const { updateById, findById, createDoc } = require('../utils/db.utils');
  */
 exports.getAllEvents = async (queryParams) => {
     const { status, search, page = 1, limit = 10, sortBy = '-startTime', category } = queryParams;
-    console.log(queryParams)
-    // Build query
+
+
     const query = {};
 
     if (status && status !== 'all') {
@@ -92,6 +92,7 @@ exports.updateEvent = async (id, updateData, userId, userRole) => {
     }
 
     event = await updateById(Event, id, updateData)
+    
 
     return event.populate('organizer', 'name email avatar');
 };
