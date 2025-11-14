@@ -77,12 +77,6 @@ export default function LoginForm() {
         <Button type="submit" disabled={isLoading} className="w-full bg-primary hover:bg-primary/90">
           {isLoading ? "Signing in..." : "Sign In"}
         </Button>
-
-        <div className="text-center">
-          <button type="button" className="text-sm text-primary hover:underline">
-            Forgot password?
-          </button>
-        </div>
       </form>
 
     </Card>

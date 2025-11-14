@@ -7,7 +7,7 @@ exports.createSendToken = (user, statusCode, res) => {
   const options = {
     httpOnly: true, //prevent access from client
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 3600000, // Cookie expiration in milliseconds (e.g., 1 hour)
+    maxAge: 5000, // Cookie expiration in milliseconds (e.g., 1 hour)
     sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax', // Or 'Strict' or 'None' depending on your needs
     // domain: '.yourdomain.com', // Optional: Specify the domain for the cookie
     // path: '/' // Optional: Specify the path for the cookie

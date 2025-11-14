@@ -1,11 +1,13 @@
 // src/routes/PublicOnlyRoute.jsx
+import { useSelector } from "react-redux"
 import { Navigate, Outlet } from "react-router-dom"
-import Cookies from "js-cookie"
 
 export default function PublicOnlyRoute() {
-  const token = Cookies.get("token")
 
-  if (token) {
+  const isAuthenticated = useSelector((state) => state?.auth?.isAuthenticated)
+
+
+  if (isAuthenticated) {
     // Already logged in → redirect to dashboard
     return <Navigate to="/dashboard" replace />
   }

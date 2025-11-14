@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 // Create a reusable Axios instance
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL, // base URL from environment variable
@@ -12,9 +13,21 @@ const apiClient = axios.create({
 // Optional: Response interceptor for global error handling
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
-      console.error("Unauthorized access. Redirect to login or handle here.");
+
+      console.log("Unauthorized access. Redirect to login or handle here.");
+
+
+      const { store } = await import("../global/store");
+      const { persistor } = await import("../global/store");
+      const { logout } = await import("../global/authSlice");
+
+      store.dispatch(logout())
+      await persistor.purge()
+
+      alert("Your login has ended. Please sign in again to access your account.")
+
       window.location.href = "/login";
     }
     return Promise.reject(error);
