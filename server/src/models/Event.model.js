@@ -16,7 +16,7 @@ const eventSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, 'Event must have a category'],
-      enum: ['meeting', 'conference', 'workshop', 'social', 'other'],
+      enum: ["Technology", "Education", "Conference", "Networking", "Workshop", "meeting"],
     },
     startTime: {
       type: Date,
@@ -41,7 +41,7 @@ const eventSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    participants: [   
+    participants: [
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
@@ -51,7 +51,7 @@ const eventSchema = new mongoose.Schema(
         status: {
           type: String,
           enum: ["joined", "interested", "left"],
-          default: "interested",
+          default: "joined",
         },
         joinedAt: {
           type: Date,
@@ -66,6 +66,15 @@ const eventSchema = new mongoose.Schema(
       size: { type: Number },
       public_id: { type: String },
     },
+    attachments: [
+      {
+        name: { type: String },
+        url: { type: String },
+        type: { type: String },  // image, pdf, etc.
+        size: { type: Number },
+        public_id: { type: String },
+      }
+    ],
 
     status: {
       type: String,

@@ -4,7 +4,7 @@ import { formatTime, formatDate } from "../../utils/formateDate"
 import { Link, useNavigate } from "react-router-dom"
 import { Card } from "../ui/Card"
 import { Button } from "../ui/Button"
-import { getStatusColor } from "../../utils/getStatus"
+import { getStatusColor } from "../../utils/getStatusColor"
 
 export default function EventCard({ event }) {
   const participantCount = event?.participants?.length || 0

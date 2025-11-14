@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import ThemeToggle from "../componets/ui/ThemeToggle"
+import ThemeToggle from "../componets/common/ThemeToggle"
 import Header from "../componets/landing/Header"
 import Footer from "../componets/landing/Footer"
 import Logo from "../componets/ui/Logo"

@@ -130,7 +130,7 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
-        data: { message: 'deleted event succefully' },
+        message:  "deleted event succefully",
     });
 });
 
@@ -207,3 +207,4 @@ exports.getMyEvents = asyncHandler(async (req, res, next) => {
         },
     });
 });
+

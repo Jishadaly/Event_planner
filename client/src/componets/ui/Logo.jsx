@@ -7,7 +7,7 @@ export default function Logo({ to = '/' }) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
                 E
             </div>
-            <span className="font-semibold text-lg hidden sm:inline">EventHub</span>
+            {/* <span className="font-semibold text-lg hidden sm:inline">EventHub</span> */}
         </Link>
     )
 }

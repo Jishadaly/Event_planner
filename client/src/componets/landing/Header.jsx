@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom"
 import { Button } from "../ui/Button"
 import Logo from "../ui/Logo"
-import ThemeToggle from "../ui/ThemeToggle"
+import ThemeToggle from "../common/ThemeToggle"
 
 export default function Header() {
     return (

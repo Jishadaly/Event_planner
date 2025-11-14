@@ -41,7 +41,7 @@ exports.validateEvent = (req, res, next) => {
   }
 
   // Validate category
-  const validCategories = ['meeting', 'conference', 'workshop', 'social', 'other'];
+  const validCategories = ["Technology", "Education", "Conference", "Networking", "Workshop", "meeting"]
   if (category && !validCategories.includes(category)) {
     errors.push(`Category must be one of: ${validCategories.join(', ')}`);
   }

@@ -3,7 +3,7 @@ import { Button } from "../ui/Button"
 import { LogOut } from "lucide-react"
 import { LayoutDashboard } from "lucide-react"
 import NotificationsPanel from "../notification/NotificationPanel"
-import ThemeToggle from "../ui/ThemeToggle"
+import ThemeToggle from "../common/ThemeToggle"
 import Logo from "../ui/Logo"
 import { useDispatch } from "react-redux"
 import { logout } from "../../api/apiService"
@@ -68,7 +68,7 @@ export default function DashboardHeader() {
                                 </Button>
                             </Link>
                         ) : (
-                            <Link to={`/dashboard/${userRole}`}>
+                            <Link to={`/dashboard`}>
                                 <Button variant="outline" size="sm" className="flex items-center gap-1">
                                     <LayoutDashboard className="h-4 w-4" />
                                     Dashboard

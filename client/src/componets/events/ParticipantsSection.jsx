@@ -20,6 +20,7 @@ export default function ParticipantsSection({ participants, expandedView = false
     }
   }
 
+  console.log(participants)
   return (
     <Card className="p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -51,10 +52,10 @@ export default function ParticipantsSection({ participants, expandedView = false
             <div key={participant.id} className="flex items-center justify-between rounded-lg border border-border p-3">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-semibold text-sm">
-                  {participant.user?.fullName.charAt(0).toUpperCase()}
+                  {participant.user?.name.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-semibold text-sm truncate">{participant.user?.fullName}</p>
+                  <p className="font-semibold text-sm truncate">{participant.user?.name}</p>
                   <p className="text-xs text-muted-foreground truncate">{participant.user?.email}</p>
                 </div>
               </div>

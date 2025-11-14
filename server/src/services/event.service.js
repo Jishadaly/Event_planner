@@ -1,5 +1,6 @@
 const Event = require('../models/Event.model');
 const AppError = require('../utils/AppError');
+const { deleteFromCloudinary } = require('../utils/cloudinary');
 const { updateById, findById, createDoc } = require('../utils/db.utils');
 
 /**
@@ -27,7 +28,7 @@ exports.getAllEvents = async (queryParams) => {
     const skip = (page - 1) * limit;
     const events = await Event.find(query)
         .populate('organizer', 'name email avatar')
-        .populate('participants', 'name email avatar')
+        .populate('participants.user', 'name email avatar')
         .sort(sortBy)
         .skip(skip)
         .limit(parseInt(limit));
@@ -51,7 +52,7 @@ exports.getAllEvents = async (queryParams) => {
 exports.getEventById = async (id) => {
     const event = await Event.findById(id)
         .populate('organizer', 'name email avatar')
-        .populate('participants', 'name email avatar');
+        .populate('participants.user', 'name email avatar');
 
     if (!event) {
         throw new AppError('Event not found', 404);
@@ -68,7 +69,7 @@ exports.createEvent = async (eventData, userId) => {
     const event = await createDoc(Event, {
         ...eventData,
         organizer: userId,
-        participants: [userId],
+        participants: [{ user: userId, status: "joined", joinedAt: new Date() }],
     })
 
     console.log(event)
@@ -92,7 +93,7 @@ exports.updateEvent = async (id, updateData, userId, userRole) => {
     }
 
     event = await updateById(Event, id, updateData)
-    
+
 
     return event.populate('organizer', 'name email avatar');
 };
@@ -107,9 +108,14 @@ exports.deleteEvent = async (id, userId, userRole) => {
         throw new AppError('Event not found', 404);
     }
 
-    // Check permissions
-    if (userRole !== 'admin' && event.organizer.toString() !== userId) {
-        throw new AppError('You do not have permission to delete this event', 403);
+    if (event.attachments && event.attachments.length > 0) {
+        for (const file of event.attachments) {
+            await deleteFromCloudinary(event.public_id)
+        }
+    }
+
+    if (event.image.public_id) {
+        await deleteFromCloudinary(event.image.public_id)
     }
 
     await event.deleteOne();
@@ -126,11 +132,16 @@ exports.addParticipant = async (eventId, userId) => {
         throw new AppError('Event not found', 404);
     }
 
-    if (event.participants.includes(userId)) {
+    if (event.participants.some((p) => p.user.toString() === userId)) {
         throw new AppError('User is already a participant', 400);
     }
 
-    event.participants.push(userId);
+    const participant = {
+        user: userId,
+        status: "joined",
+        joinedAt: new Date()
+    }
+    event.participants.push(participant);
     await event.save();
 
     return event.populate('participants', 'name email avatar');
