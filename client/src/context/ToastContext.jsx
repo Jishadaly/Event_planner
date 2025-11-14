@@ -18,7 +18,7 @@ export function ToastProvider({ children, position = "top-right", motion = "smoo
     const hideToast = useCallback((id) => setToasts((prev) => prev.filter((t) => t.id !== id)), [])
 
     return (
-        <ToastContext.Provider value={{ showToast, hideToast }}>
+        <ToastContext.Provider value={{ toast:showToast, hideToast }}>
             {children}
             {/* Toast stack container */}
             <div

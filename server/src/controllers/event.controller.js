@@ -66,9 +66,6 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         image: imageData,
     }, req.user._id);
 
-
-    console.log(event, "event doc ")
-
     // Emit socket event for new event
     if (req.app.get('io')) {
         req.app.get('io').emit('event:created', {

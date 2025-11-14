@@ -20,6 +20,8 @@ export default function ParticipantsSection({ participants, expandedView = false
     }
   }
 
+
+
   console.log(participants)
   return (
     <Card className="p-6">

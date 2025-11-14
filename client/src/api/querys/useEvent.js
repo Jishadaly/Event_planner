@@ -7,7 +7,7 @@ export const useEvent = (eventId) => {
         queryKey: ["event", eventId],
         queryFn: async () => await apiClient.get(`/event/${eventId}`)
     });
-    console.log(data)
-    return { event:data?.data?.event, isLoading, error, refetch }
+
+    return { event: data?.data?.event, isLoading, error, refetchEvent: refetch }
 
 };

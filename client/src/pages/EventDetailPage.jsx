@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MapPin, Calendar, Clock, User, Users, MessageCircle } from "lucide-react"
+import { MapPin, Calendar, Clock, User, Users, MessageCircle, LogOut, LoaderCircle } from "lucide-react"
 import { formatDateFull, formatTime } from "../utils/formateDate"
 import EventChat from "../componets/events/ChatSection"
 import ParticipantsSection from "../componets/events/ParticipantsSection"
@@ -11,16 +11,47 @@ import Modal from "../componets/ui/Modal"
 import { useEvent } from "../api/querys/useEvent"
 import Badge from "../componets/ui/Badge"
 import { getStatusColor } from "../utils/getStatusColor"
+import { useJoin, useLeave } from "../api/querys/useJoin"
+import { useSelector } from "react-redux"
+import { useToast } from "../context/ToastContext"
 
 export default function EventDetailsPage() {
-    
-    const [isJoined, setIsJoined] = useState(false)
+
     const [showChat, setShowChat] = useState(false)
     const [showParticipants, setShowParticipants] = useState(false)
     const { id } = useParams()
-    const { event } = useEvent(id)
+    const { event, refetchEvent } = useEvent(id)
+    const joinMutation = useJoin(id)
+    const leaveMutation = useLeave(id)
+    const user = useSelector((state) => state?.auth?.user)
+    const { toast } = useToast()
+
+
 
     const joinedParticipants = event?.participants?.filter((p) => p.status === "joined") || []
+    const isJoined = event?.participants?.some((p) => p.user.id === user._id)
+
+    console.log(isJoined, "is joined user")
+
+    const handleJoin = () => {
+        joinMutation.mutate(id, {
+            onSuccess: () => {
+                toast("success", "You're In!!", "Successfully joined the event.")
+                refetchEvent()
+                setShowChat(true)
+            }
+        })
+    }
+
+    const handleLeave = () => {
+        leaveMutation.mutate(id, {
+            onSuccess: () => {
+                refetchEvent()
+                toast("success", "You Left the Event", "You're no longer a participant.")
+
+            }
+        })
+    }
 
     return (
         <div className="min-h-screen bg-background">
@@ -113,17 +144,16 @@ export default function EventDetailsPage() {
                                 </div>
 
                                 {!isJoined ? (
-                                    <Button
-                                        onClick={() => setIsJoined(true)}
-                                        className="w-full bg-primary hover:bg-primary/90 h-12 text-base"
-                                    >
-                                        Join Event
+                                    <Button onClick={handleJoin} className="w-full bg-primary hover:bg-primary/90 h-12 text-base" disabled={joinMutation.isPending}>
+                                        {joinMutation.isPending ? <LoaderCircle /> : "Join Event"}
                                     </Button>
                                 ) : (
                                     <div className="space-y-3">
-                                        <div className="rounded-lg bg-green-100 p-3 text-center dark:bg-green-900">
-                                            <p className="font-semibold text-green-800 dark:text-green-200">You've joined this event!</p>
-                                        </div>
+
+                                        <Button className="w-full bg-red-600 hover:bg-red-500 h-12" onClick={handleLeave}>
+                                            <LogOut className="h-4 w-4 mr-2" />
+                                            {leaveMutation.isPending ? <LoaderCircle /> : "Leave Event"}
+                                        </Button>
 
                                         <Button variant="outline" onClick={() => setShowChat(!showChat)} className="w-full">
                                             <MessageCircle className="h-4 w-4 mr-2" />
@@ -142,7 +172,6 @@ export default function EventDetailsPage() {
                         </Card>
 
                         {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} /> </Card>}
-
                     </div>
                 </div>
 

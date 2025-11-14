@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom"
 
 export default function RegisterForm() {
   const dispatch = useDispatch()
-  const { showToast } = useToast()
+  const { toast } = useToast()
   const { errors, validate, clearError } = useFormValidation(registerSchema)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
@@ -45,11 +45,11 @@ export default function RegisterForm() {
 
       const res = await dispatch(registerUser(payload)).unwrap()
       console.log(res)
-      showToast("success", "Registration Successful", "Your account has been created")
+      toast("success", "Registration Successful", "Your account has been created")
       navigate("/dashboard", { replace: true });
     } catch (err) {
       console.log(err, "cachedd")
-      showToast("error", "Registration Failed", err.message || "Please try again.")
+      toast("error", "Registration Failed", err.message || "Please try again.")
     } finally {
       setIsLoading(false)
     }

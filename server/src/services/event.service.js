@@ -158,8 +158,9 @@ exports.removeParticipant = async (eventId, userId) => {
     }
 
     event.participants = event.participants.filter(
-        (p) => p.toString() !== userId
+        (p) => p.user.toString() !== userId
     );
+
     await event.save();
 
     return event.populate('participants', 'name email avatar');

@@ -15,7 +15,7 @@ export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" })
   const { errors, validate, clearError } = useFormValidation(loginSchema)
   const [isLoading, setIsLoading] = useState(false)
-  const { showToast } = useToast()
+  const { toast } = useToast()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -33,11 +33,11 @@ export default function LoginForm() {
       if (!isValid) return
       setIsLoading(true)
       await dispatch(loginUser(formData)).unwrap()
-      showToast("success", "Login Successful", "Welcome to Event Hub")
+      toast("success", "Login Successful", "Welcome to Event Hub")
       navigate("/dashboard", { replace: true });
 
     } catch (err) {
-      showToast("error", "Login Failed", err.message || "Please try again.")
+      toast("error", "Login Failed", err.message || "Please try again.")
     } finally {
       setIsLoading(false)
     }
