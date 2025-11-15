@@ -9,21 +9,19 @@ import EventDetailsPage from "../pages/EventDetailPage"
 import Home from "../pages/LandingPage"
 import ProtectedRoute from "./ProtecedRoute"
 import PublicOnlyRoute from "./PublicRoute"
-// import AuthLayout from "@/layouts/AuthLayout"
-// import DashboardLayout from "@/layouts/DashboardLayout"
-// import OrganizerDashboard from "@/pages/dashboard/OrganizerDashboard"
-// import ParticipantDashboard from "@/pages/dashboard/ParticipantDashboard"
-
-
-// import ProtectedRoute from "./ProtectedRoute"
-// import RoleRoute from "./RoleRoute"
+import { SocketProvider } from "../context/SocketContext"
+import { useSelector } from "react-redux"
 
 export default function AppRoutes() {
+  const user = useSelector((state) => state?.auth?.user)
+
   return (
     <Routes>
       {/* Public pages */}
-          <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home />} />
+
       <Route element={<MainLayout />}>
+
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -31,13 +29,17 @@ export default function AppRoutes() {
       </Route>
 
 
-      <Route element={<DashboardLayout />}>
-        <Route element={<ProtectedRoute />}>
+
+      <Route element={<SocketProvider userId={user?._id} > <ProtectedRoute />  </SocketProvider>}
+      >
+        <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="events" element={<EventsListingPage />} />
           <Route path="events/:id" element={<EventDetailsPage />} />
         </Route>
+        
       </Route>
-    </Routes>
+
+    </Routes >
   )
 }

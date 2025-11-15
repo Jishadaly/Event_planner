@@ -3,56 +3,48 @@ import { Send, Users } from "lucide-react"
 import { Card } from "../ui/Card"
 import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
+import { useSocket } from "../../context/SocketContext"
 
-// Mock initial messages
-const mockMessages = [
-  {
-    id: "1",
-    userId: "org1",
-    userName: "Tech Academy",
-    message: "Welcome everyone! Excited to have you here for the React workshop.",
-    timestamp: new Date(Date.now() - 3600000),
-    avatar: "TA",
-  },
-  {
-    id: "2",
-    userId: "user1",
-    userName: "Alex Johnson",
-    message: "Thanks for organizing this! Looking forward to learning advanced patterns.",
-    timestamp: new Date(Date.now() - 1800000),
-    avatar: "AJ",
-  },
-  {
-    id: "3",
-    userId: "user2",
-    userName: "Sarah Chen",
-    message: "Is this workshop beginner-friendly or should I have advanced React knowledge?",
-    timestamp: new Date(Date.now() - 900000),
-    avatar: "SC",
-  },
-  {
-    id: "4",
-    userId: "org1",
-    userName: "Tech Academy",
-    message: "Great question Sarah! We recommend intermediate React knowledge, but we'll cover fundamentals briefly.",
-    timestamp: new Date(Date.now() - 600000),
-    avatar: "TA",
-  },
-]
-
-export default function EventChat({ eventId }) {
-  const [messages, setMessages] = useState(mockMessages)
+export default function EventChat({ eventId, user }) {
+  const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [activeUsers, setActiveUsers] = useState(0);
+
   const messagesEndRef = useRef(null)
+  const socket = useSocket()
 
-//   const scrollToBottom = () => {
-//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-//   }
+  //   const scrollToBottom = () => {
+  //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  //   }
 
-//   useEffect(() => {
-//     scrollToBottom()
-//   }, [messages])
+  //   useEffect(() => {
+  //     scrollToBottom()
+  //   }, [messages])
+
+  console.log(user)
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const listener = (data) => {
+      setMessages((prev) => [...prev, { ...data, timestamp: new Date(data.timestamp) }]);
+    };
+
+    const handleRoomUsers = (users) => {
+      setActiveUsers(users.length); 
+    };
+
+    socket.on("room-users", handleRoomUsers);
+    socket.on("receive-message", listener);
+
+    return () => {
+      socket.emit("leave-event-room", eventId);
+      socket.off("receive-message", listener);
+      socket.off("room-users", handleRoomUsers);
+    };
+  }, [socket, eventId]);
+
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -61,16 +53,18 @@ export default function EventChat({ eventId }) {
     setIsLoading(true)
     try {
       const message = {
-        id: Date.now().toString(),
-        userId: "current-user",
-        userName: "You",
+        id: eventId,
+        userId: user?._id,
+        userName: user?.name,
         message: newMessage,
         timestamp: new Date(),
-        avatar: "YO",
+        avatar: user.name.split('')[0] || "YO",
       }
 
-      setMessages((prev) => [...prev, message])
+      socket.emit("send-message", message)
       setNewMessage("")
+
+      // setMessages((prev) => [...prev, message])
 
       await new Promise((resolve) => setTimeout(resolve, 500))
     } finally {
@@ -87,7 +81,7 @@ export default function EventChat({ eventId }) {
         <h3 className="font-semibold">Event Chat</h3>
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <Users className="h-3 w-3" />
-          {activeParticipants} active
+          {activeUsers} active
         </div>
       </div>
 
@@ -100,7 +94,7 @@ export default function EventChat({ eventId }) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2">
-                <p className="text-sm font-semibold">{msg.userName}</p>
+                <p className="text-sm font-semibold">{msg.userId === user?._id ? "You" : msg.userName}</p>
                 <p className="text-xs text-muted-foreground">
                   {msg.timestamp.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
                 </p>
@@ -133,6 +127,6 @@ export default function EventChat({ eventId }) {
           </Button>
         </form>
       </div>
-    </div>
+    </div >
   )
 }

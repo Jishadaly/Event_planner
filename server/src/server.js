@@ -2,6 +2,7 @@ require('dotenv').config();
 const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/database');
+const socketServer = require('./services/socket')
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -15,6 +16,8 @@ connectDB();
 
 // Create HTTP server
 const server = http.createServer(app);
+socketServer(server)
+
 
 // Start server
 const PORT = process.env.PORT || 3000;

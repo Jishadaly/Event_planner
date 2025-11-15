@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MapPin, Calendar, Clock, User, Users, MessageCircle, LogOut, LoaderCircle } from "lucide-react"
 import { formatDateFull, formatTime } from "../utils/formateDate"
 import EventChat from "../componets/events/ChatSection"
@@ -14,24 +14,43 @@ import { getStatusColor } from "../utils/getStatusColor"
 import { useJoin, useLeave } from "../api/querys/useJoin"
 import { useSelector } from "react-redux"
 import { useToast } from "../context/ToastContext"
+import { useSocket } from "../context/SocketContext"
+
 
 export default function EventDetailsPage() {
 
     const [showChat, setShowChat] = useState(false)
     const [showParticipants, setShowParticipants] = useState(false)
     const { id } = useParams()
-    const { event, refetchEvent } = useEvent(id)
+    const { event, isLoading: isEventLoading, refetchEvent } = useEvent(id)
     const joinMutation = useJoin(id)
     const leaveMutation = useLeave(id)
     const user = useSelector((state) => state?.auth?.user)
     const { toast } = useToast()
-
-
+    const socket = useSocket()
 
     const joinedParticipants = event?.participants?.filter((p) => p.status === "joined") || []
     const isJoined = event?.participants?.some((p) => p.user.id === user._id)
 
-    console.log(isJoined, "is joined user")
+
+    useEffect(() => {
+        if (!socket) return;
+        if (!event?._id) return;
+
+        const eventId = event._id;
+
+        if (showChat) {
+            socket.emit("join-event-room", eventId);
+        }
+
+        return () => {
+            if (socket) {
+                socket.emit("leave-event-room", eventId);
+            }
+        };
+    }, [socket, showChat, event]);
+
+
 
     const handleJoin = () => {
         joinMutation.mutate(id, {
@@ -53,8 +72,12 @@ export default function EventDetailsPage() {
         })
     }
 
+    if (isEventLoading) return <div className="align-middle"> <LoaderCircle /> </div>
+
     return (
+
         <div className="min-h-screen bg-background">
+
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
                 <div className="grid gap-8 lg:grid-cols-3">
@@ -171,7 +194,7 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
 
-                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} /> </Card>}
+                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} user={user} /> </Card>}
                     </div>
                 </div>
 
