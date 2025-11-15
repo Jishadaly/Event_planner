@@ -84,7 +84,7 @@ export default function EventDetailsPage() {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="relative h-96 w-full overflow-hidden rounded-lg">
 
-                            <img src={event?.image?.url || "/placeholder.svg"} alt={event?.title} fill className="object-cover" />
+                            <img src={event?.image?.url || "/placeholder.svg"} alt={event?.title} className="object-cover" />
                             <Badge className={`absolute top-4 right-4 ${getStatusColor(event?.status)}`}>
                                 {event?.status.charAt(0).toUpperCase() + event?.status.slice(1)}
                             </Badge>
@@ -194,7 +194,7 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
 
-                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} user={user} /> </Card>}
+                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat  eventId={event?.id} user={user} /> </Card>}
                     </div>
                 </div>
 

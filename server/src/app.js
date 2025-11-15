@@ -62,6 +62,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/event',eventRoutes)
+app.use('/api/event',eventRoutes)
 
 // Handle undefined routes
 app.all('*', (req, res, next) => {

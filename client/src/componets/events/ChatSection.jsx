@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react"
 import { Send, Users } from "lucide-react"
-import { Card } from "../ui/Card"
 import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
 import { useSocket } from "../../context/SocketContext"
+import MessageCard from "./MessageCard"
 
 export default function EventChat({ eventId, user }) {
   const [messages, setMessages] = useState([])
@@ -11,18 +11,7 @@ export default function EventChat({ eventId, user }) {
   const [isLoading, setIsLoading] = useState(false)
   const [activeUsers, setActiveUsers] = useState(0);
 
-  const messagesEndRef = useRef(null)
   const socket = useSocket()
-
-  //   const scrollToBottom = () => {
-  //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  //   }
-
-  //   useEffect(() => {
-  //     scrollToBottom()
-  //   }, [messages])
-
-  console.log(user)
 
   useEffect(() => {
     if (!socket) return;
@@ -32,7 +21,7 @@ export default function EventChat({ eventId, user }) {
     };
 
     const handleRoomUsers = (users) => {
-      setActiveUsers(users.length); 
+      setActiveUsers(users.length);
     };
 
     socket.on("room-users", handleRoomUsers);
@@ -50,7 +39,6 @@ export default function EventChat({ eventId, user }) {
     e.preventDefault()
     if (!newMessage.trim()) return
 
-    setIsLoading(true)
     try {
       const message = {
         id: eventId,
@@ -64,15 +52,10 @@ export default function EventChat({ eventId, user }) {
       socket.emit("send-message", message)
       setNewMessage("")
 
-      // setMessages((prev) => [...prev, message])
-
-      await new Promise((resolve) => setTimeout(resolve, 500))
     } finally {
       setIsLoading(false)
     }
   }
-
-  const activeParticipants = 12 // Mock number
 
   return (
     <div className="flex flex-col h-96 border border-border rounded-lg bg-card">
@@ -88,22 +71,9 @@ export default function EventChat({ eventId, user }) {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => (
-          <div key={msg.id} className="flex gap-3">
-            <div className="flex-shrink-0 h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-semibold">
-              {msg.avatar}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
-                <p className="text-sm font-semibold">{msg.userId === user?._id ? "You" : msg.userName}</p>
-                <p className="text-xs text-muted-foreground">
-                  {msg.timestamp.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
-                </p>
-              </div>
-              <p className="text-sm text-foreground break-words">{msg.message}</p>
-            </div>
-          </div>
+          <MessageCard key={msg.timestamp + Math.random()} message={msg} currUserId={user?._id} />
         ))}
-        <div ref={messagesEndRef} />
+        <div />
       </div>
 
       {/* Input */}

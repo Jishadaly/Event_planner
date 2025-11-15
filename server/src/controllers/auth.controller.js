@@ -2,7 +2,7 @@ const User = require('../models/User.model');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 const { createSendToken } = require('../utils/jwt');
-const { sendWelcomeEmail } = require('../services/email.service');
+const { sendWelcomeEmail } = require('../utils/email/email.service');
 const { createDoc, findOne } = require('../utils/db.utils');
 
 
@@ -22,9 +22,7 @@ exports.register = asyncHandler(async (req, res, next) => {
     role: role || 'participant',
   })
 
-  sendWelcomeEmail(user).catch((err) =>
-    console.error('Failed to send welcome email:', err)
-  );
+  sendWelcomeEmail(user)
 
   createSendToken(user, 201, res);
 });
@@ -32,8 +30,6 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
-
-  console.log("loginnnnnn")
 
   if (!email || !password) {
     return next(new AppError('Please provide email and password', 400));

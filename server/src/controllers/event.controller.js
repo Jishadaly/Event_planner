@@ -1,6 +1,7 @@
 const asyncHandler = require('../utils/asyncHandler');
 const eventService = require('../services/event.service');
 const { uploadToCloudinary } = require('../utils/cloudinary');
+const { sendNotification } = require('../utils/notify');
 
 /**
  * @desc    Get all events
@@ -66,9 +67,19 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         image: imageData,
     }, req.user._id);
 
-    // Emit socket event for new event
-    if (req.app.get('io')) {
-        req.app.get('io').emit('event:created', {
+    const io = req.app.get("io");
+
+
+    await sendNotification(req.user._id, {
+        title: "Event Created",
+        message: `Your event "${event.title}" has been successfully created.`,
+        type: "event-created",
+        event: event._id,
+    }, io);
+
+
+    if (io) {
+        io.emit("event:created", {
             event,
             organizer: req.user,
         });
@@ -95,10 +106,21 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
         req.user.role
     );
 
-    // Emit socket event for event update
-    if (req.app.get('io')) {
-        req.app.get('io').to(`event:${event._id}`).emit('event:updated', event);
-    }
+    const io = req.app.get("io");
+
+    const participants = updatedEvent.participants.map(p => p.user);
+
+    // Notify all joined participants
+    participants.forEach(async (userId) => {
+        await sendNotification(userId, {
+            title: "Event Updated",
+            message: `Event "${updatedEvent.title}" has new updates.`,
+            type: "event-updated",
+            event: updatedEvent._id,
+        }, io);
+
+        io.to(userId.toString()).emit("event:updated", updatedEvent);
+    });
 
     res.status(200).json({
         status: 'success',
@@ -127,7 +149,7 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
-        message:  "deleted event succefully",
+        message: "deleted event succefully",
     });
 });
 
@@ -142,13 +164,18 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         req.user._id.toString()
     );
 
-    // Emit socket event
-    if (req.app.get('io')) {
-        req.app.get('io').to(`event:${event._id}`).emit('participant:joined', {
-            event,
-            user: req.user,
-        });
-    }
+    // Send notification to organizer
+    await sendNotification(event.organizer, {
+        title: "New Participant Joined",
+        message: `${req.user.name} joined your event "${event.title}".`,
+        type: "event-join",
+        event: event._id,
+    }, io);
+
+    io.to(event.organizer.toString()).emit("event:participant-joined", {
+        user: req.user,
+        eventId: event._id,
+    });
 
     res.status(200).json({
         status: 'success',
