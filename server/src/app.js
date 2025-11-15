@@ -5,42 +5,37 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
-const authRoutes = require('./routes/auth.routes');
-const eventRoutes = require('./routes/event.route')
 const errorHandler = require('./middlewares/error.middleware');
 const AppError = require('./utils/AppError');
 const cookieParser = require("cookie-parser")
+const authRoutes = require('./routes/auth.routes');
+const eventRoutes = require('./routes/event.route')
+const notificationRoutes = require('./routes/notification.route')
 
 const app = express();
 
 app.set('trust proxy', 1);
-
-// Security HTTP headers
 app.use(helmet());
 
-// Development logging
+//Logging-devlop-mode
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Rate limiting
-const limiter = rateLimit({
-  max: 100,
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  message: 'Too many requests from this IP, please try again later',
-});
-app.use('/api', limiter);
-
-// Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser())
 
-// Data sanitization against NoSQL query injection
+// Data sanitization NoSQL query injection, XSS
 app.use(mongoSanitize());
-
-// Data sanitization against XSS
 app.use(xss());
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 15 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again later',
+});
+app.use('/api', limiter);
 
 // CORS
 app.use(
@@ -50,7 +45,7 @@ app.use(
   })
 );
 
-// Health check
+//check
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -59,12 +54,12 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
+//API'S
 app.use('/api/auth', authRoutes);
-app.use('/api/event',eventRoutes)
-app.use('/api/event',eventRoutes)
+app.use('/api/event', eventRoutes)
+app.use('/api/notification', notificationRoutes)
 
-// Handle undefined routes
+//undefined routes
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });

@@ -7,7 +7,7 @@ const {
 
 
 cron.schedule("*/5 * * * *", async () => {
-  console.log("CRONE :: Checking events for upcoming reminders...");
+  console.log("CRON! Checking events for upcoming reminders...");
 
   const now = new Date();
   const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
@@ -27,12 +27,12 @@ cron.schedule("*/5 * * * *", async () => {
 
     event.reminderSent = true;
     await event.save();
-    console.log(`📨 Reminder sent for: ${event.title}`);
+    console.log(`Reminder sent for: ${event.title}`);
   }
 });
 
 cron.schedule("0 0 * * *", async () => {
-  console.log("CRONE :: Sending daily digest...");
+  console.log("CRON! Sending daily digest...");
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -72,5 +72,5 @@ cron.schedule("0 0 * * *", async () => {
     });
   }
 
-  console.log("📨 Daily digest sent.");
+  console.log("Daily digest sent.");
 });

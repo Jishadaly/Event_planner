@@ -4,24 +4,23 @@ const app = require('./app');
 const connectDB = require('./config/database');
 const socketServer = require('./services/socket')
 
-// Handle uncaught exceptions
+//uncaught exceptions
 process.on('uncaughtException', (err) => {
-    console.error('💥 UNCAUGHT EXCEPTION! Shutting down...');
+    console.error('UNCAUGHT EXCEPTION! Shutting down...');
     console.error(err.name, err.message);
     process.exit(1);
 });
 
-// Connect to database
 connectDB();
 
-// Create HTTP server
 const server = http.createServer(app);
-socketServer(server)
+const io = socketServer(server)
+app.set(io)
 
-// ⏰ IMPORT CRON JOBS HERE
+//crone
 require('./utils/cronJobs');
 
-// Start server
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`
@@ -30,13 +29,4 @@ server.listen(PORT, () => {
    API: http://localhost:${PORT}/api
    Health: http://localhost:${PORT}/health
   `);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.error('💥 UNHANDLED REJECTION! Shutting down...');
-    console.error(err.name, err.message);
-    server.close(() => {
-        process.exit(1);
-    });
 });

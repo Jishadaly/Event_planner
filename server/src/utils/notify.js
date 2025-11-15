@@ -9,10 +9,6 @@ exports.sendNotification = async (userId, { title, message, event, type }, io = 
     event,
   });
 
-  // Emit socket if user is online
-  if (io) {
-    io.to(userId.toString()).emit("notification:new", notif);
-  }
 
   return notif;
 };

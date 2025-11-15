@@ -2,6 +2,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const eventService = require('../services/event.service');
 const { uploadToCloudinary } = require('../utils/cloudinary');
 const { sendNotification } = require('../utils/notify');
+const getIo = require('../utils/getIo') 
 
 /**
  * @desc    Get all events
@@ -78,12 +79,11 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     }, io);
 
 
-    if (io) {
-        io.emit("event:created", {
-            event,
-            organizer: req.user,
-        });
-    }
+    // if (io) {
+    //     io.to(req.user._id.toString()).emit("event:created", {
+    //         event
+    //     }); 
+    // }
 
     res.status(201).json({
         status: 'success',
@@ -110,7 +110,6 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
 
     const participants = updatedEvent.participants.map(p => p.user);
 
-    // Notify all joined participants
     participants.forEach(async (userId) => {
         await sendNotification(userId, {
             title: "Event Updated",
@@ -170,12 +169,15 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         message: `${req.user.name} joined your event "${event.title}".`,
         type: "event-join",
         event: event._id,
-    }, io);
-
-    io.to(event.organizer.toString()).emit("event:participant-joined", {
-        user: req.user,
-        eventId: event._id,
     });
+
+    if (req.app.get('io')) {
+        console.log("io to ", event.organizer.toString())
+        io.to(event.organizer.toString()).emit("event:participant-joined", {
+            user: req.user,
+            eventId: event._id,
+        });
+    }else console.log("nooooooooooooooooooooooooooooooooooooooooooooooooooo")
 
     res.status(200).json({
         status: 'success',
@@ -196,11 +198,10 @@ exports.leaveEvent = asyncHandler(async (req, res, next) => {
         req.user._id.toString()
     );
 
-    // Emit socket event
     if (req.app.get('io')) {
-        req.app.get('io').to(`event:${event._id}`).emit('participant:left', {
-            event,
-            userId: req.user._id,
+        io.to(event.organizer.toString()).emit("event:participant-left", {
+            user: req.user,
+            eventId: event._id,
         });
     }
 

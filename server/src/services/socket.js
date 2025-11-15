@@ -8,6 +8,8 @@ module.exports = function socketServer(httpServer) {
 
     io.on("connection", (socket) => {
         const userId = socket.handshake.query.userId;
+        console.log("connecton ",userId)
+        socket.join(userId);
 
         // JOIN EVENT ROOM
         socket.on("join-event-room", (eventId) => {

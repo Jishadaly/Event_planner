@@ -23,7 +23,6 @@ exports.register = asyncHandler(async (req, res, next) => {
   })
 
   sendWelcomeEmail(user)
-
   createSendToken(user, 201, res);
 });
 
@@ -45,7 +44,6 @@ exports.login = asyncHandler(async (req, res, next) => {
   user.lastSeen = Date.now();
   await user.save({ validateBeforeSave: false });
 
-  // Send token response
   createSendToken(user, 200, res);
 });
 
