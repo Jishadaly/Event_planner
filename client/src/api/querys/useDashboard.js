@@ -27,9 +27,29 @@ export const useOrganzerDashboard = () => {
         queryKey: ["organizerDashboard"],
         queryFn: async () => {
             const res = await apiClient.get(`/dashboard/organizer`);
+            return res.data;
+        },
+        staleTime: 1000 * 60 * 1,
+    });
+
+
+    return {
+        dashboardData: data,
+        isLoading,
+        error,
+        refetchDashboard: refetch
+    };
+};
+
+export const useParticipantDashboard = () => {
+
+    const { data, isLoading, error, refetch } = useQuery({
+        queryKey: ["participantDashboard"],
+        queryFn: async () => {
+            const res = await apiClient.get(`/dashboard/participant`);
             console.log(res)
 
-            return res.data; 
+            return res?.data?.data;
         },
         staleTime: 1000 * 60 * 1,
     });

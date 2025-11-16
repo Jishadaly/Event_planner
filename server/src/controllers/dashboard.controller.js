@@ -202,7 +202,7 @@ exports.getOrganizerDashboard = asyncHandler(async (req, res, next) => {
             title: 1,
             date: 1,
             status: 1,
-            createdAt:1,
+            createdAt: 1,
             participantsCount: { $size: "$participants" }
         }
     ).sort({ createdAt: -1 });
@@ -223,4 +223,47 @@ exports.getOrganizerDashboard = asyncHandler(async (req, res, next) => {
         attendanceData,
         myEventsList
     });
+});
+
+
+exports.getParticipantDashboard = asyncHandler(async (req, res, next) => {
+
+    const userId = req.user._id;
+
+    // Fetch events where this user joined/interested
+    const myEvents = await Event.find({
+        "participants.user": userId,
+        "participants.status": { $in: ["joined", "interested"] }
+    })
+        .select("title startTime endTime category location status participants")
+        .sort({ startTime: 1 });
+
+    // Separate upcoming & past events
+    const now = new Date();
+
+    const upcomingEvents = myEvents.filter(
+        (ev) => ev.status === "upcomming"
+    );
+
+    const pastEvents = myEvents.filter(
+        (ev) => new Date(ev.endTime) < now
+    );
+
+    // Stats
+    const stats = {
+        totalJoined: myEvents.length,
+        upcomingCount: upcomingEvents.length,
+        completedCount: pastEvents.length,
+    };
+
+    res.status(200).json({
+        status: "success",
+        data: {
+            stats,
+            myEvents,
+            upcomingEvents,
+            pastEvents,
+        },
+    });
+
 });
