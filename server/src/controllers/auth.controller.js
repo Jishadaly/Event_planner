@@ -37,7 +37,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email }).select("+password")
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect password', 401));
+    return next(new AppError('Incorrect password', 400));
   }
 
   user.isOnline = true;

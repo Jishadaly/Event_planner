@@ -19,25 +19,22 @@ export default function AppRoutes() {
     <Routes>
       {/* Public pages */}
       <Route path="/" element={<Home />} />
-
+      
       <Route element={<MainLayout />}>
-
         <Route element={<PublicOnlyRoute />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Route>
 
+      <Route element={<SocketProvider userId={user?._id} > <ProtectedRoute />  </SocketProvider>}>
 
-
-      <Route element={<SocketProvider userId={user?._id} > <ProtectedRoute />  </SocketProvider>}
-      >
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="events" element={<EventsListingPage />} />
           <Route path="events/:id" element={<EventDetailsPage />} />
         </Route>
-        
+
       </Route>
 
     </Routes >

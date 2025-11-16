@@ -38,7 +38,11 @@ export default function EventCard({ event }) {
           <p className="mb-3 text-xs text-muted-foreground">{event.category}</p>
 
           {/* Description */}
-          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground flex-grow">{event.description}</p>
+          <p className="mb-4 text-sm text-muted-foreground flex-grow">
+            {event.description.length > 100
+              ? event.description.slice(0, 100) + "..."
+              : event.description}
+          </p>
 
           {/* Event Details */}
           <div className="mb-4 space-y-2 text-sm">
@@ -55,7 +59,10 @@ export default function EventCard({ event }) {
 
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 flex-shrink-0 text-primary" />
-                <p className="line-clamp-1">{event.location}</p>
+                <p className="line-clamp-1">
+                  {event.location.split(" ").slice(0, 3).join(" ") + (event.location.split(" ").length > 3 ? "..." : "")}
+                </p>
+
               </div>
             </div>
 

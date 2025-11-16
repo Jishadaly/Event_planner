@@ -2,19 +2,13 @@ import React from 'react'
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import { Card } from '../../ui/Card'
 
-export default function EventByCatogoryChart({data}) {
+export default function DashBarChart({ data, title }) {
     return (
         <Card className="p-6">
-            <h3 className="mb-6 text-lg font-semibold">Events by Category</h3>
+            <h3 className="mb-6 text-lg font-semibold">{title}</h3>
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart
-                    data={[
-                        { category: "Technology", count: 12 },
-                        { category: "Education", count: 8 },
-                        { category: "Conference", count: 10 },
-                        { category: "Networking", count: 7 },
-                        { category: "Workshop", count: 5 },
-                    ]}
+                    data={data}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="category" />

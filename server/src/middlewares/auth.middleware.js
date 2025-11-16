@@ -18,7 +18,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     return next(
       new AppError('The user belonging to this token no longer exists.', 401));
   }
-
+  console.log(currentUser)
   req.user = currentUser;
   next();
 });
@@ -26,10 +26,11 @@ exports.protect = asyncHandler(async (req, res, next) => {
 //Restrict to specific roles
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
+    console.log(req.user.role , ' ' , roles)
     if (!roles.includes(req.user.role)) {
       return next(new AppError('You do not have permission to perform this action.', 403));
     }
-    
+
     next();
   };
 };

@@ -12,7 +12,7 @@ router.use(protect);
 // Get user's events
 router.get('/my-events', eventController.getMyEvents);
 
-// Public event routes
+
 router
     .route('/')
     .get(eventController.getAllEvents)

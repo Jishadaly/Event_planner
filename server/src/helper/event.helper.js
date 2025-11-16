@@ -1,7 +1,9 @@
 const Event = require('../models/Event.model');
+const User = require('../models/User.model');
 const AppError = require('../utils/AppError');
 const { deleteFromCloudinary } = require('../utils/cloud.utils');
 const { updateById, findById, createDoc } = require('../utils/db.utils');
+
 
 /**
  * Get all events with filters and pagination
@@ -146,7 +148,13 @@ exports.addParticipant = async (eventId, userId) => {
 
     const joinedUser = await User.findById(userId).select('name email avatar');
 
-    return { event: event.populate('participants', 'name email avatar'), user: joinedUser }
+    await event.populate([
+        { path: 'participants.user', select: 'name email avatar' },
+        { path: 'organizer', select: 'name email avatar' }
+    ]);
+
+    return { event, user: joinedUser };
+
 };
 
 /**

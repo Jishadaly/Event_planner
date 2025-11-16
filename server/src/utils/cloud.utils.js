@@ -1,10 +1,12 @@
+// src/utils/cloudinary.js
 const { Readable } = require('stream');
-const { cloud: cloudinary } = require('../config/cloudinary');
+const cloudinary = require('../config/cloudinary'); // <-- import cloudinary directly
 
-//upload
+// upload
 const uploadToCloudinary = (fileBuffer, folder, filename) => {
-  console.filename("filename", filename)
+  console.log("filename", filename);
   return new Promise((resolve, reject) => {
+
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
@@ -12,7 +14,6 @@ const uploadToCloudinary = (fileBuffer, folder, filename) => {
         resource_type: 'auto',
       },
       (error, result) => {
-
         if (error) return reject(error);
         resolve({
           name: result.original_filename,
@@ -28,7 +29,7 @@ const uploadToCloudinary = (fileBuffer, folder, filename) => {
   });
 };
 
-//delete
+// delete
 const deleteFromCloudinary = async (publicId) => {
   if (!publicId) return;
   try {

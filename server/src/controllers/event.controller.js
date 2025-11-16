@@ -3,7 +3,7 @@ const eventService = require('../helper/event.helper');
 const { uploadToCloudinary } = require('../utils/cloud.utils');
 const { sendNotification } = require('../utils/notify');
 const getIo = require('../utils/getIo');
-const { emitParticipantJoined, emitSocketEvent } = require('../utils/socketEmitter');
+const emitSocketEvent = require('../utils/socketEmitter');
 
 /**
  * @desc    Get all events
@@ -56,13 +56,6 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         }
     }
 
-    console.log("FINAL EVENT DATA:", {
-        ...req.body,
-        organizer: req.user._id,
-        attachments,
-        image: imageData,
-    });
-
     const event = await eventService.createEvent({
         ...req.body,
         attachments,
@@ -75,16 +68,10 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     await sendNotification(req.user._id, {
         title: "Event Created",
         message: `Your event "${event.title}" has been successfully created.`,
-        type: "event-created",
+        type: "success",
         event: event._id,
     }, io);
 
-
-    // if (io) {
-    //     io.to(req.user._id.toString()).emit("event:created", {
-    //         event
-    //     }); 
-    // }
 
     res.status(201).json({
         status: 'success',
@@ -107,19 +94,18 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
         req.user.role
     );
 
-    const io = req.app.get("io");
-
     const participants = updatedEvent.participants.map(p => p.user);
+    const io = getIo(req);
 
     participants.forEach(async (userId) => {
         await sendNotification(userId, {
             title: "Event Updated",
             message: `Event "${updatedEvent.title}" has new updates.`,
-            type: "event-updated",
+            type: "info",
             event: updatedEvent._id,
-        }, io);
-
-        io.to(userId.toString()).emit("event:updated", updatedEvent);
+        });
+        const payload = { event: event.title }
+        emitSocketEvent(io, userId, "event:update", payload)
     });
 
     res.status(200).json({
@@ -164,22 +150,20 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         req.user._id.toString()
     );
 
+
     // Send notification to organizer
     await sendNotification(event.organizer, {
         title: "New Participant Joined",
         message: `${req.user.name} joined your event "${event.title}".`,
-        type: "event-join",
+        type: "success",
         event: event._id,
     });
 
     const io = getIo(req)
 
     if (io) {
-        const payload = {
-            userName: joinedUser.name,
-            eventName: event.title,
-        }
-        emitSocketEvent(io, event.organizer._id.toString(), "event:participant-joined", payload)
+        const payload = { user, eventName: event.title }
+        emitSocketEvent(io, event?.organizer?._id?.toString(), "event:participant-joined", payload)
     }
 
 
@@ -202,12 +186,17 @@ exports.leaveEvent = asyncHandler(async (req, res, next) => {
         req.user._id.toString()
     );
 
+    await sendNotification(event.organizer, {
+        title: "A Participant Leaved",
+        message: `${req.user.name} Leaved your event "${event.title}".`,
+        type: "warning",
+        event: event._id,
+    });
+
     const io = getIo(req)
     if (io) {
-        io.to(event.organizer.toString()).emit("event:participant-left", {
-            userName: removedUser.name,
-            eventName: event.title,
-        });
+        const payload = { user: removedUser, eventName: event.title }
+        emitSocketEvent(io, event?.organizer?._id?.toString(), "event:participant-left", payload)
     }
 
     res.status(200).json({

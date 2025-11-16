@@ -9,6 +9,7 @@ export const SocketProvider = ({ children, userId }) => {
     const [socket, setSocket] = useState(null)
     const { toast } = useToast()
 
+
     useEffect(() => {
         if (!userId) return;
 
@@ -18,7 +19,7 @@ export const SocketProvider = ({ children, userId }) => {
         })
 
         socketRef.current = newSocket
-        setSocket(newSocket)  // 🔥 This triggers rerender → now socket is NOT null
+        setSocket(newSocket) 
 
         // Event created
         newSocket.on("event:created", ({ event }) => {
@@ -27,19 +28,19 @@ export const SocketProvider = ({ children, userId }) => {
 
         // Event updated
         newSocket.on("event:updated", (event) => {
-            toast(`Event Updated: ${event.title}`, {
-                icon: "🔁"
-            });
+            toast('success', `Event Updated: ${event.title}`,'Check now Whats new!!');
         });
 
         // User joined event
-        newSocket.on("event:participant-joined", ({ userName, eventName }) => {
-            toast('success', `${userName} joined your event`, `${userName} has joined your event "${eventName}"`)
+        newSocket.on("event:participant-joined", ({ user, eventName }) => {
+            if (user._id === userId) return
+            toast('success', `${user.name} joined your event`, `${user.name} has joined your event "${eventName}"`)
         });
 
         // User left event
-        newSocket.on("event:participant-left", ({ userName, eventName }) => {
-            toast('error', `${userName} left your event`, `${userName} has left your event "${eventName}"`)
+        newSocket.on("event:participant-left", ({ user, eventName }) => {
+            if (user._id === userId) return
+            toast('error', `${user.name} left your event`, `${user.name} has left your event "${eventName}"`)
         });
 
         newSocket.on("connect", () => {

@@ -16,6 +16,8 @@ apiClient.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
 
+      console.log(error.response)
+
       console.log("Unauthorized access. Redirect to login or handle here.");
 
 
@@ -27,7 +29,6 @@ apiClient.interceptors.response.use(
       await persistor.purge()
 
       alert("Your login has ended. Please sign in again to access your account.")
-
       window.location.href = "/login";
     }
     return Promise.reject(error);

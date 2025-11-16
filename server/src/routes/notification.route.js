@@ -7,7 +7,8 @@ router.use(protect);
 
 router.get("/", notificationController.getMyNotifications);
 router.patch("/:id/read", notificationController.markAsRead);
-router.patch("/read-all", notificationController.markAllAsRead);
+router.patch("/readAll", notificationController.markAllAsRead);
 router.delete("/:id", notificationController.deleteNotification);
+router.delete("/", notificationController.deleteAllNotification);
 
 module.exports = router;

@@ -7,9 +7,5 @@ import { SocketProvider } from './context/SocketContext'
 
 
 export default function App() {
-  return (
-    // <SocketProvider userId={user._id}>
-      <AppRoutes />
-    // </SocketProvider>
-  )
+  return <AppRoutes />
 }

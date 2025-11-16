@@ -11,6 +11,7 @@ const cookieParser = require("cookie-parser")
 const authRoutes = require('./routes/auth.routes');
 const eventRoutes = require('./routes/event.route')
 const notificationRoutes = require('./routes/notification.route')
+const dashboardRoutes = require('./routes/dashboard.route')
 
 const app = express();
 
@@ -58,6 +59,8 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/event', eventRoutes)
 app.use('/api/notification', notificationRoutes)
+app.use('/api/dashboard', dashboardRoutes)
+
 
 //undefined routes
 app.all('*', (req, res, next) => {

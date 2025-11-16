@@ -12,7 +12,7 @@ exports.getMyNotifications = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: "success",
     results: notifications.length,
-    data: notifications,
+    data:notifications,
   });
 });
 
@@ -29,12 +29,12 @@ exports.markAsRead = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: notification,
+    notification,
   });
 });
 
 /**
- * @desc  Mark user all notifications as read
+ * @desc  Mark user all notifications as read 
  * @route PATCH /api/notifications/read-all
  */
 exports.markAllAsRead = asyncHandler(async (req, res) => {
@@ -50,7 +50,7 @@ exports.markAllAsRead = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc  Delete a notification
+ * @desc  Delete a notification 
  * @route DELETE /api/notifications/:id
  */
 exports.deleteNotification = asyncHandler(async (req, res) => {
@@ -62,5 +62,21 @@ exports.deleteNotification = asyncHandler(async (req, res) => {
   res.status(204).json({
     status: "success",
     message: "Notification deleted",
+  });
+});
+
+/**
+ * @desc  clear all notifications
+ * @route DELETE /api/notifications/clear-all
+ */
+exports.deleteAllNotification = asyncHandler(async (req, res) => {
+  
+  await Notification.deleteMany({
+    user: req.user._id,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "All Notification deleted",
   });
 });

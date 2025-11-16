@@ -1,9 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "../../config/axiosInstance";
-import { useToast } from "../../context/ToastContext";
 
 export const useEventCreate = () => {
-    const { showToast } = useToast();
 
     const mutation = useMutation({
         mutationFn: async (payload) => {
@@ -18,22 +16,10 @@ export const useEventCreate = () => {
                 }
             });
 
-            const { data } = await apiClient.post("/event", form, {
+            await apiClient.post("/event", form, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            return data;
-        },
-        onSuccess: () => {
-            showToast("success", "Event Created", "Your event has been successfully added!");
-        },
-        onError: (err) => {
-            console.error("Event creation failed:", err.response?.data?.message);
-            showToast(
-                "error",
-                "Failed to Create Event",
-                err.response?.data?.message || "Try again later"
-            );
-        },
+        }
     });
 
     return mutation;

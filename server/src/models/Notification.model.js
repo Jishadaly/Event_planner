@@ -20,7 +20,7 @@ const notificationSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["event-created", "event-updated", "event-reminder", "event-join", "event-cancelled"],
+      enum: ["success", "warning", "info"],
     },
 
     event: {

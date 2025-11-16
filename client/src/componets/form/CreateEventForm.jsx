@@ -14,7 +14,7 @@ import { useFormValidation } from "../../hooks/useFormValidator";
 
 export default function CreateEventForm({ onClose }) {
     const { errors, validate, clearError } = useFormValidation(createEventSchema);
-    const { showToast } = useToast();
+    const { toast } = useToast();
     const mutation = useEventCreate()
 
     const [formData, setFormData] = useState({
@@ -64,11 +64,26 @@ export default function CreateEventForm({ onClose }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
         const isValid = await validate(formData);
         if (!isValid) return;
-        mutation.mutate(formData);
-        onClose()
+        mutation.mutate(formData, {
+            onSuccess: () => {
+                console.log("suceeeeec event creation")
+                toast("success", "Event Created", "Your event has been successfully added!");
+                onClose()
+
+            },
+            onError: (err) => {
+                console.error("Event creation failed:", err.response?.data?.message);
+                toast(
+                    "error",
+                    "Failed to Create Event",
+                    err.response?.data?.message || "Try again later"
+                );
+
+            },
+
+        })
     };
 
     const removeAttachment = (index) => {
@@ -131,7 +146,7 @@ export default function CreateEventForm({ onClose }) {
                         className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
                     >
                         {
-                            CATEGORIES.map((cat) => <option value={cat}>{cat}</option>)
+                            CATEGORIES.map((cat, i) => <option key={i} value={cat}>{cat}</option>)
                         }
 
 

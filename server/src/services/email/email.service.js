@@ -1,7 +1,8 @@
+const { createEmailTransporter } = require("../../config/email");
 const eventTempletes = require("./mailTempletes");
 
 exports.sendMail = async ({ to, subject, html }) => {
-  const transporter = createTransporter();
+  const transporter = createEmailTransporter();
 
   const mailOptions = {
     from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM}>`,
