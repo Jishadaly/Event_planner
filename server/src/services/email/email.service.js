@@ -1,17 +1,4 @@
-const nodemailer = require("nodemailer");
-const eventTempletes = require("./eventTempletes");
-
-
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "smtp.mailtrap.io",
-    port: process.env.EMAIL_PORT || 2525,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-};
+const eventTempletes = require("./mailTempletes");
 
 exports.sendMail = async ({ to, subject, html }) => {
   const transporter = createTransporter();
@@ -65,3 +52,5 @@ exports.sendEventReminderMail = async ({ user, event }) => {
     html: eventTempletes.eventReminder({ event, user }),
   });
 };
+
+//"smtp.mailtrap.io  || 2525"

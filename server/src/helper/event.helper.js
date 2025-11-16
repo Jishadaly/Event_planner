@@ -1,6 +1,6 @@
 const Event = require('../models/Event.model');
 const AppError = require('../utils/AppError');
-const { deleteFromCloudinary } = require('../utils/cloudinary');
+const { deleteFromCloudinary } = require('../utils/cloud.utils');
 const { updateById, findById, createDoc } = require('../utils/db.utils');
 
 /**
@@ -144,27 +144,40 @@ exports.addParticipant = async (eventId, userId) => {
     event.participants.push(participant);
     await event.save();
 
-    return event.populate('participants', 'name email avatar');
+    const joinedUser = await User.findById(userId).select('name email avatar');
+
+    return { event: event.populate('participants', 'name email avatar'), user: joinedUser }
 };
 
 /**
  * Remove participant from event
  */
 exports.removeParticipant = async (eventId, userId) => {
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(eventId)
+        .populate('participants.user', 'name email avatar')
+        .populate('organizer', 'name email');
 
     if (!event) {
         throw new AppError('Event not found', 404);
     }
 
+    const removedUser = event.participants.find(
+        (p) => p.user._id.toString() === userId
+    )?.user;
+
     event.participants = event.participants.filter(
-        (p) => p.user.toString() !== userId
+        (p) => p.user._id.toString() !== userId
     );
 
     await event.save();
 
-    return event.populate('participants', 'name email avatar');
+
+    return {
+        event: await event.populate('participants.user', 'name email avatar'),
+        removedUser,
+    };
 };
+
 
 /**
  * Get events by user (as organizer or participant)

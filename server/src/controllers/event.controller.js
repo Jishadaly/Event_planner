@@ -1,8 +1,9 @@
 const asyncHandler = require('../utils/asyncHandler');
-const eventService = require('../services/event.service');
-const { uploadToCloudinary } = require('../utils/cloudinary');
+const eventService = require('../helper/event.helper');
+const { uploadToCloudinary } = require('../utils/cloud.utils');
 const { sendNotification } = require('../utils/notify');
-const getIo = require('../utils/getIo') 
+const getIo = require('../utils/getIo');
+const { emitParticipantJoined, emitSocketEvent } = require('../utils/socketEmitter');
 
 /**
  * @desc    Get all events
@@ -68,7 +69,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
         image: imageData,
     }, req.user._id);
 
-    const io = req.app.get("io");
+    const io = getIo(req)
 
 
     await sendNotification(req.user._id, {
@@ -158,7 +159,7 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
  * @access  Private
  */
 exports.joinEvent = asyncHandler(async (req, res, next) => {
-    const event = await eventService.addParticipant(
+    const { event, user } = await eventService.addParticipant(
         req.params.id,
         req.user._id.toString()
     );
@@ -171,13 +172,16 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         event: event._id,
     });
 
-    if (req.app.get('io')) {
-        console.log("io to ", event.organizer.toString())
-        io.to(event.organizer.toString()).emit("event:participant-joined", {
-            user: req.user,
-            eventId: event._id,
-        });
-    }else console.log("nooooooooooooooooooooooooooooooooooooooooooooooooooo")
+    const io = getIo(req)
+
+    if (io) {
+        const payload = {
+            userName: joinedUser.name,
+            eventName: event.title,
+        }
+        emitSocketEvent(io, event.organizer._id.toString(), "event:participant-joined", payload)
+    }
+
 
     res.status(200).json({
         status: 'success',
@@ -193,15 +197,16 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
  * @access  Private
  */
 exports.leaveEvent = asyncHandler(async (req, res, next) => {
-    const event = await eventService.removeParticipant(
+    const { event, removedUser } = await eventService.removeParticipant(
         req.params.id,
         req.user._id.toString()
     );
 
-    if (req.app.get('io')) {
+    const io = getIo(req)
+    if (io) {
         io.to(event.organizer.toString()).emit("event:participant-left", {
-            user: req.user,
-            eventId: event._id,
+            userName: removedUser.name,
+            eventName: event.title,
         });
     }
 

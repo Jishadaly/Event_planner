@@ -3,7 +3,7 @@ const Event = require("../models/Event.model");
 const {
   sendDailyDigestMail,
   sendEventReminderMail,
-} = require("./email/email.service");
+} = require("../services/email/email.service");
 
 
 cron.schedule("*/5 * * * *", async () => {

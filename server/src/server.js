@@ -2,7 +2,7 @@ require('dotenv').config();
 const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/database');
-const socketServer = require('./services/socket')
+const socketServer = require('./services/socket/socket')
 
 //uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -15,7 +15,7 @@ connectDB();
 
 const server = http.createServer(app);
 const io = socketServer(server)
-app.set(io)
+app.set('io',io)
 
 //crone
 require('./utils/cronJobs');

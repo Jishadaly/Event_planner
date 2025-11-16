@@ -1,16 +1,9 @@
-const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
+const { cloud: cloudinary } = require('../config/cloudinary');
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_HOST,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-/**
- * Upload buffer (from multer memoryStorage) to Cloudinary
- */
+//upload
 const uploadToCloudinary = (fileBuffer, folder, filename) => {
+  console.filename("filename", filename)
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
@@ -19,6 +12,7 @@ const uploadToCloudinary = (fileBuffer, folder, filename) => {
         resource_type: 'auto',
       },
       (error, result) => {
+
         if (error) return reject(error);
         resolve({
           name: result.original_filename,
@@ -34,9 +28,7 @@ const uploadToCloudinary = (fileBuffer, folder, filename) => {
   });
 };
 
-/**
- * Delete file from Cloudinary
- */
+//delete
 const deleteFromCloudinary = async (publicId) => {
   if (!publicId) return;
   try {

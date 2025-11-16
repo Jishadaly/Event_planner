@@ -32,20 +32,16 @@ export const SocketProvider = ({ children, userId }) => {
             });
         });
 
-        // User joined your event
-        newSocket.on("event:participant-joined", ({ user, eventId }) => {
-            console.log(user,eventId, "joined ",user.name )
-
-            // toast.success(`${user.name} joined your event`);
+        // User joined event
+        newSocket.on("event:participant-joined", ({ userName, eventName }) => {
+            toast('success', `${userName} joined your event`, `${userName} has joined your event "${eventName}"`)
         });
 
-        // User left your event
-        newSocket.on("event:participant-left", ({ user, eventId }) => {
-            console.log(user,eventId, "leved ",user.name )
-            // toast.error(`${user.name} left your event`);
+        // User left event
+        newSocket.on("event:participant-left", ({ userName, eventName }) => {
+            toast('error', `${userName} left your event`, `${userName} has left your event "${eventName}"`)
         });
 
-        // Debugging
         newSocket.on("connect", () => {
             console.log("Socket connected:", newSocket.id);
         });

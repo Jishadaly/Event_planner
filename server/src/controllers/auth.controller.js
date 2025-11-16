@@ -2,7 +2,7 @@ const User = require('../models/User.model');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 const { createSendToken } = require('../utils/jwt');
-const { sendWelcomeEmail } = require('../utils/email/email.service');
+const { sendWelcomeEmail } = require('../services/email/email.service');
 const { createDoc, findOne } = require('../utils/db.utils');
 
 
