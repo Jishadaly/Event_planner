@@ -15,6 +15,7 @@ import { useJoin, useLeave } from "../api/querys/useJoin"
 import { useSelector } from "react-redux"
 import { useToast } from "../context/ToastContext"
 import { useSocket } from "../context/SocketContext"
+import PageLoader from '../componets/common/PageLoader'
 
 
 export default function EventDetailsPage() {
@@ -72,7 +73,7 @@ export default function EventDetailsPage() {
         })
     }
 
-    if (isEventLoading) return <div className="align-middle"> <LoaderCircle /> </div>
+    if (isEventLoading) return <PageLoader />
 
     return (
 
@@ -194,7 +195,7 @@ export default function EventDetailsPage() {
                             </div>
                         </Card>
 
-                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat  eventId={event?.id} user={user} /> </Card>}
+                        {isJoined && showChat && <Card className="p-6 sticky top-24"> <EventChat eventId={event?.id} user={user} /> </Card>}
                     </div>
                 </div>
 
