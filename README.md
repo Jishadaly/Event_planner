@@ -95,6 +95,14 @@ GET /api/dashboard/admin       - Admin stats
 GET /api/dashboard/organizer   - Organizer stats
 GET /api/dashboard/participant - Participant stats
 ```
+### Notification
+```
+GET    /api/notifications           - Get my notifications
+PATCH  /api/notifications/:id/read  - Mark one as read
+PATCH  /api/notifications/readAll   - Mark all as read
+DELETE /api/notifications/:id       - Delete one
+DELETE /api/notifications           - Delete all
+```
 
 ---
 
@@ -126,6 +134,48 @@ Checking events for upcoming reminders...
 - Checks for events starting tomorrow
 - Sends reminder notifications to all participants
 - Runs automatically every day at 12:00 AM
+
+---
+
+## Theme Toggler (Dark / Light Mode)
+
+The UI includes:
+
+✔ Global theme provider
+✔ One-click switch
+✔ Auto-detect system preference
+✔ Fully persistent via localStorage
+
+Used in Navbar or Settings:
+
+dark
+
+light
+
+system
+
+---
+
+## 🔐 Role-Based Authentication
+
+Each login assigns a role:
+
+Role	Access
+Admin	Manage users, events, analytics
+Organizer	Create/update events, dashboard
+Participant	Join events, chat, notifications
+
+Frontend protects pages using:
+
+ProtectedRoute
+
+RoleBasedRoute
+
+Backend protects APIs using:
+
+protect
+
+restrictTo("admin" | "organizer" | "participant")
 
 ---
 
