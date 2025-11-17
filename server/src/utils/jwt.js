@@ -5,13 +5,11 @@ exports.createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
   const options = {
-    httpOnly: true, //prevent access from client
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 5 * 24 * 60 * 60 * 1000, // Cookie expiration in milliseconds (e.g., 1 hour)
-    sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax', // Or 'Strict' or 'None' depending on your needs
-    // domain: '.yourdomain.com', // Optional: Specify the domain for the cookie
-    // path: '/' // Optional: Specify the path for the cookie
-  }
+    httpOnly: true,
+    secure: true,       // must be true in production (Vercel uses HTTPS)
+    sameSite: "None",   // required for cross-domain cookies
+    maxAge: 5 * 24 * 60 * 60 * 1000,
+  };
   res.cookie('sessionToken', token, options);
 
   user.password = undefined;

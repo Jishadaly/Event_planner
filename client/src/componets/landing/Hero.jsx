@@ -1,7 +1,8 @@
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import { Button } from "../ui/Button"
 
 export default function Hero() {
+    const navigate = useNavigate()
     return (
         <section className="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-32 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
@@ -12,7 +13,7 @@ export default function Hero() {
                 </div>
 
                 {/* Headline */}
-                <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-foreground">
+                <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-foreground" onClick={()=> navigate('/dashboard')}>
                     Connect, Collaborate, Create Events
                 </h1>
 
