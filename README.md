@@ -1,10 +1,10 @@
 # Event Hub – Real-Time Event Management Platform
 
-A full-stack event management app with real-time chat, notifications, and analytics.
+A full-stack event management app with real-time chat, live notifications, analytics dashboard, and smooth animations.
 
 ---
 
-## Setup
+## 🚀 Setup
 
 ### Prerequisites
 - Node.js (v16+)
@@ -15,11 +15,11 @@ A full-stack event management app with real-time chat, notifications, and analyt
 
 **1. Clone & Install**
 ```bash
-git clone https://github.com/Jishadaly/Event_planner
-cd event-hub
+git clone https://github.com/Jishadaly/Event_planner.git
+cd Event_planner
 ```
 
-**2. Backend**
+**2. Backend Setup**
 ```bash
 cd server
 npm install
@@ -40,7 +40,7 @@ Run server:
 npm run dev
 ```
 
-**3. Frontend**
+**3. Frontend Setup**
 ```bash
 cd client
 npm install
@@ -69,7 +69,7 @@ npm run dev
 
 ---
 
-## API Endpoints
+## 📡 API Endpoints
 
 ### Auth
 ```
@@ -95,7 +95,8 @@ GET /api/dashboard/admin       - Admin stats
 GET /api/dashboard/organizer   - Organizer stats
 GET /api/dashboard/participant - Participant stats
 ```
-### Notification
+
+### Notifications
 ```
 GET    /api/notifications           - Get my notifications
 PATCH  /api/notifications/:id/read  - Mark one as read
@@ -106,105 +107,163 @@ DELETE /api/notifications           - Delete all
 
 ---
 
-## ⚡ Real-Time (Socket.IO)
+## ⚡ Real-Time Features (Socket.IO)
 
-**Room Events**
-- `join-event-room` - Join room
-- `leave-event-room` - Leave room
-- `room-users` - Live participants
+### Room Management
+- `join-event-room` - Join event room
+- `leave-event-room` - Leave event room
+- `room-users` - Get live participant list
 
-**Chat Events**
-- `send-message` - Send message
-- `receive-message` - Get message
+### Chat
+- `send-message` - Send chat message
+- `receive-message` - Receive messages instantly
 
-**Notifications**
-- `event:created` - New event
-- `event:updated` - Event changed
-- `event:participant-joined` - User joined
-- `event:participant-left` - User left
+### Live Notifications
+- `event:created` - New event notification
+- `event:updated` - Event update alert
+- `event:participant-joined` - User joined event
+- `event:participant-left` - User left event
 
 ---
 
 ## ⏱️ Background Jobs (Cron)
 
-Runs daily at midnight to send event reminders:
-Checking events for upcoming reminders...
+Automated daily reminders at **12:00 AM**:
+
+```javascript
+cron.schedule("0 0 * * *", async () => {
+  console.log("Checking events for upcoming reminders..."); 
+  // Send reminder notifications
+});
+```
 
 **What it does:**
 - Checks for events starting tomorrow
-- Sends reminder notifications to all participants
-- Runs automatically every day at 12:00 AM
+- Sends reminder notifications to participants
+- Runs automatically every day
 
 ---
 
-## Theme Toggler (Dark / Light Mode)
+## 🎨 Frontend Features
 
-The UI includes:
+### UI/UX
+- **Tailwind CSS** + Custom components
+- **Fully Responsive** - Mobile, tablet, desktop
+- **Framer Motion** - Smooth page & modal animations
 
-✔ Global theme provider
-✔ One-click switch
-✔ Auto-detect system preference
-✔ Fully persistent via localStorage
+### Theme Toggler
+- Light / Dark / System mode
+- One-click switch in navbar
+- Auto-detect system preference
+- Persistent via localStorage
 
-Used in Navbar or Settings:
+### Notification Panel
+- Real-time notification dropdown
+- Live count badge
+- Mark as read / Delete / Clear all
+- Color-coded by notification type
 
-dark
-
-light
-
-system
+### Custom Components
+- Reusable buttons, cards, modals
+- Form validation with error messages
+- Loading skeletons and spinners
 
 ---
 
 ## 🔐 Role-Based Authentication
 
-Each login assigns a role:
+| Role        | Access Level |
+|-------------|-------------|
+| **Admin** | Manage users, events, full analytics |
+| **Organizer** | Create/update/delete own events, dashboard |
+| **Participant** | Join events, chat, view notifications |
 
-Role	Access
-Admin	Manage users, events, analytics
-Organizer	Create/update events, dashboard
-Participant	Join events, chat, notifications
 
-Frontend protects pages using:
-
-ProtectedRoute
-
-RoleBasedRoute
-
-Backend protects APIs using:
-
-protect
-
-restrictTo("admin" | "organizer" | "participant")
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend:** React, Vite, Tailwind CSS, React Query, Socket.IO  
-**Backend:** Node.js, Express, MongoDB, Socket.IO, JWT, Cloudinary  
-**Tools:** Multer, Bcrypt, Recharts, Cron
+### Frontend
+- **React** (Vite) - Fast development
+- **Redux Toolkit** - GLobal State
+- **Tailwind CSS** - Styling
+- **Framer Motion** - Animations
+- **React Query** - Data fetching
+- **Socket.IO Client** - Real-time updates
+- **Recharts** - Dashboard analytics
+- **Lucide React** - Icons
+
+
+### Backend
+- **Node.js** - Runtime
+- **Express** - Web framework
+- **MongoDB** - Database
+- **Socket.IO** - WebSocket server
+- **JWT** - Authentication
+- **Cloudinary** - Image storage
+- **Multer** - File uploads
+- **Node-Cron** - Scheduled tasks
+- **Bcrypt** - Password hashing
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- Create and manage events
-- Real-time chat
-- Live notifications
-- Dashboard with analytics
-- Cloud image uploads
-- Role-based access (Admin/Organizer/Participant)
-- Automated daily reminders
+### Core Functionality
+- ✅ Create, edit, and delete events
+- ✅ Join and leave events
+- ✅ Real-time chat rooms
+- ✅ Live participant tracking
+- ✅ Event search and filters
+
+### User Experience
+- ✅ Dark/Light theme toggle
+- ✅ Smooth page transitions
+- ✅ Animated modals
+- ✅ Real-time notifications panel
+- ✅ Responsive across all devices
+- ✅ Loading states and error handling
+
+### Advanced Features
+- ✅ Dashboard analytics with charts
+- ✅ Cloud image uploads
+- ✅ Role-based access control
+- ✅ Automated daily reminders
+- ✅ System theme detection
+
+---
+
+## 📱 Responsive Design
+
+The app is fully responsive and works seamlessly on:
+- 📱 Mobile phones (320px+)
+- 📱 Tablets (768px+)
+- 💻 Laptops (1024px+)
+- 🖥️ Desktops (1440px+)
 
 ---
 
 ## 📦 Deployment
 
-1. Push to GitHub
-2. Deploy backend (Render/Railway)
-3. Deploy frontend (Vercel/Netlify)
-4. Set environment variables
+1. **Push to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **Deploy Backend** (Render)
+   - Connect GitHub repo
+   - Set environment variables
+   - Deploy
+
+3. **Deploy Frontend** (Vercel)
+   - Connect GitHub repo
+   - Set environment variables
+   - Deploy
+
+4. **Update URLs**
+   - Update `VITE_API_URL` and `VITE_SOCKET_URL` in frontend `.env`
 
 ---
 
@@ -214,4 +273,11 @@ MIT
 
 ---
 
-⭐ Star this repo if you find it helpful!
+## 👤 Author
+
+**Jishad Aly**
+- GitHub: [@Jishadaly](https://github.com/Jishadaly)
+
+---
+
+⭐ **Star this repo if you find it helpful!**
