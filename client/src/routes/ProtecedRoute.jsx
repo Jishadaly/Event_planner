@@ -3,8 +3,7 @@ import { useSelector } from "react-redux"
 
 export default function ProtectedRoute() {
   const isAuthenticated = useSelector((state) => state?.auth?.isAuthenticated)
-  
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (!isAuthenticated) return <Navigate to="/login" />
   return <Outlet/>
 }
