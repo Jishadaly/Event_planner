@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react"
 import { X, CheckCircle, AlertCircle, Info, XCircle } from "lucide-react"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function NotificationToast({
   type = "info",
   title,
   message,
-  duration = 4000,
+  duration = 3000,
   onClose,
 }) {
   const [isVisible, setIsVisible] = useState(true)
-  const [animationClass, setAnimationClass] = useState("animate-toast-in")
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAnimationClass("animate-toast-out") // trigger exit animation
       setTimeout(() => onClose?.(), 500) // wait for fade-out
     }, duration)
 
@@ -44,25 +43,30 @@ export default function NotificationToast({
   }[type]
 
   return (
-    <div
-      className={`relative w-96 p-4 rounded-lg border shadow-lg z-50 ${animationClass} ${styles.bg} ${styles.border}`}
-    >
-      <div className="flex gap-3 items-start">
-        <div className="flex-shrink-0">{styles.icon}</div>
-        <div className="flex-1">
-          <p className="font-semibold text-sm">{title}</p>
-          <p className="text-xs text-muted-foreground mt-1">{message}</p>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.8, y: -20 }}
+        transition={{ type: "keyframes", stiffness: 500, damping: 15 }}
+        className={`relative w-96 p-4 rounded-lg border shadow-lg z-50 ${styles.bg} ${styles.border}`}
+      >
+        <div className="flex gap-3 items-start">
+          <div className="flex-shrink-0">{styles.icon}</div>
+          <div className="flex-1">
+            <p className="font-semibold text-sm">{title}</p>
+            <p className="text-xs text-muted-foreground mt-1">{message}</p>
+          </div>
+          <button
+            onClick={() => {
+              setTimeout(() => onClose?.(), 300)
+            }}
+            className="text-muted-foreground hover:text-foreground flex-shrink-0"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
-        <button
-          onClick={() => {
-            setAnimationClass("animate-toast-out")
-            setTimeout(() => onClose?.(), 300)
-          }}
-          className="text-muted-foreground hover:text-foreground flex-shrink-0"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   )
 }

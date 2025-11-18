@@ -18,8 +18,6 @@ export function InputField({ label, id, type = "text", value, onChange, error, p
           }`}
       />
       {error && <FormError children={error} className="text-sm text-destructive mt-1" />}
-      {/* <p className="text-sm text-destructive mt-1">{error}</p> */}
-
     </div>
   )
 }

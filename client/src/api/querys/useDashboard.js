@@ -11,7 +11,6 @@ export const useAdminDashboard = () => {
         },
         staleTime: 1000 * 60 * 1,
     });
-
     return {
         dashboardData: data,
         isLoading,
@@ -31,8 +30,6 @@ export const useOrganzerDashboard = () => {
         },
         staleTime: 1000 * 60 * 1,
     });
-
-
     return {
         dashboardData: data,
         isLoading,
@@ -47,14 +44,10 @@ export const useParticipantDashboard = () => {
         queryKey: ["participantDashboard"],
         queryFn: async () => {
             const res = await apiClient.get(`/dashboard/participant`);
-            console.log(res)
-
             return res?.data?.data;
         },
         staleTime: 1000 * 60 * 1,
     });
-
-
     return {
         dashboardData: data,
         isLoading,

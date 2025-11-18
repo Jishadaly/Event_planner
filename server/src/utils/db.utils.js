@@ -1,6 +1,3 @@
-/**
- * Generic database utility functions for Mongoose models
- */
 
 const createDoc = async (Model, data) => {
   const doc = await Model.create(data);
@@ -13,7 +10,6 @@ const findById = async (Model, id, populate = '') => {
 };
 
 const findOne = async (Model, query, populate = '', select = '') => {
-  console.log(Model)
   const doc = await Model.findOne(query).select(select).populate(populate);
   return doc;
 };

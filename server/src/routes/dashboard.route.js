@@ -9,7 +9,4 @@ router.get('/admin', restrictTo('admin'), dashboardController.getAdminDashaboard
 router.get('/organizer', restrictTo('organizer'), dashboardController.getOrganizerDashboard)
 router.get('/participant', restrictTo('participant'), dashboardController.getParticipantDashboard)
 
-
-
 module.exports = router
-

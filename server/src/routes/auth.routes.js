@@ -8,11 +8,9 @@ const {
 
 const router = express.Router();
 
-// Public routes
 router.post('/register', validateRegistration, authController.register);
 router.post('/login', validateLogin, authController.login);
 
-// Protected routes
 router.use(protect);
 router.post('/logout', authController.logout);
 

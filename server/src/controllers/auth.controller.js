@@ -4,12 +4,13 @@ const AppError = require('../utils/AppError');
 const { createSendToken } = require('../utils/jwt');
 const { sendWelcomeEmail } = require('../services/email/email.service');
 const { createDoc, findOne } = require('../utils/db.utils');
+const bcrypt = require('bcryptjs');
+
 
 
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
-  console.log(User)
   const existingUser = await findOne(User, { email })
   if (existingUser) {
     return next(new AppError('Email already in use', 400));
@@ -47,11 +48,12 @@ exports.login = asyncHandler(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
+
 exports.logout = asyncHandler(async (req, res, next) => {
   res.cookie('sessionToken', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // Use secure in production
-    expires: new Date(0), // Set the expiration date to the epoch (immediately expires)
+    secure: process.env.NODE_ENV === 'production',
+    expires: new Date(0),
     sameSite: 'Strict',
   });
 

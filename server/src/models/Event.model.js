@@ -99,7 +99,7 @@ eventSchema.index({ startTime: 1 });
 eventSchema.index({ status: 1 });
 eventSchema.index({ organizer: 1 });
 
-// Update status based on time
+
 eventSchema.method.updateStatus = function () {
   const now = new Date();
   if (now < this.startTime) {

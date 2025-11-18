@@ -3,8 +3,6 @@ import { timeAgo } from '../../utils/formateDate'
 import { getBackgroundColor } from '../../utils/getColor'
 import { getIcon } from '../../utils/getIcon'
 import { Trash2, Eye } from 'lucide-react'
-import { motion, AnimatePresence } from "framer-motion";
-
 
 export default function NotificationItem({ notification, onDelete, onMark }) {
     return (
@@ -19,8 +17,10 @@ export default function NotificationItem({ notification, onDelete, onMark }) {
                     <div className="flex items-start justify-between gap-2">
                         <p className="font-semibold text-sm">{notification.title}</p>
                         {!notification.isRead && (
-                            // <div  className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" />
-                            <Eye className="h-4 w-4 cursor-pointer" onClick={() => onMark(notification._id)} />
+                            <>
+                                {/* <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1" /> */}
+                                <Eye className="h-4 w-4 cursor-pointer" onClick={() => onMark(notification._id)} />
+                            </>
 
                         )}
                     </div>

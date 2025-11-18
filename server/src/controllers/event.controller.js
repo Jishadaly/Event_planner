@@ -5,11 +5,7 @@ const { sendNotification } = require('../utils/notify');
 const getIo = require('../utils/getIo');
 const emitSocketEvent = require('../utils/socketEmitter');
 
-/**
- * @desc    Get all events
- * @route   GET /api/events
- * @access  Private
- */
+
 exports.getAllEvents = asyncHandler(async (req, res, next) => {
     const result = await eventService.getAllEvents(req.query);
 
@@ -21,11 +17,7 @@ exports.getAllEvents = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Get single event
- * @route   GET /api/events/:id
- * @access  Private
- */
+
 exports.getEvent = asyncHandler(async (req, res, next) => {
     const event = await eventService.getEventById(req.params.id);
 
@@ -35,11 +27,7 @@ exports.getEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Create new event
- * @route   POST /api/events
- * @access  Private (Organizer/Admin)
- */
+
 exports.createEvent = asyncHandler(async (req, res, next) => {
 
     let imageData = null;
@@ -81,11 +69,7 @@ exports.createEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Update event
- * @route   PATCH /api/events/:id
- * @access  Private (Organizer/Admin)
- */
+
 exports.updateEvent = asyncHandler(async (req, res, next) => {
     const event = await eventService.updateEvent(
         req.params.id,
@@ -116,11 +100,7 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Delete event
- * @route   DELETE /api/events/:id
- * @access  Private (Organizer/Admin)
- */
+
 exports.deleteEvent = asyncHandler(async (req, res, next) => {
     await eventService.deleteEvent(
         req.params.id,
@@ -139,11 +119,7 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Join event (add participant)
- * @route   POST /api/events/:id/join
- * @access  Private
- */
+
 exports.joinEvent = asyncHandler(async (req, res, next) => {
     const { event, user } = await eventService.addParticipant(
         req.params.id,
@@ -175,11 +151,7 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Leave event (remove participant)
- * @route   POST /api/events/:id/leave
- * @access  Private
- */
+
 exports.leaveEvent = asyncHandler(async (req, res, next) => {
     const { event, removedUser } = await eventService.removeParticipant(
         req.params.id,
@@ -207,11 +179,7 @@ exports.leaveEvent = asyncHandler(async (req, res, next) => {
     });
 });
 
-/**
- * @desc    Get user's events
- * @route   GET /api/events/my-events
- * @access  Private
- */
+
 exports.getMyEvents = asyncHandler(async (req, res, next) => {
     const events = await eventService.getUserEvents(
         req.user._id.toString(),

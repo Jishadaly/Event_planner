@@ -19,6 +19,7 @@ cron.schedule("*/5 * * * *", async () => {
 
   for (const event of events) {
     for (const p of event.participants) {
+
       await sendEventReminderMail({
         user: p.user,
         event: event,

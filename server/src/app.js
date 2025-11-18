@@ -18,12 +18,11 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(helmet());
 
-//Logging-devlop-mode
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser())
 
@@ -36,11 +35,9 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   message: 'Too many requests from this IP, please try again later',
 });
+
 app.use('/api', limiter);
 
-console.log('process.env.FRONTEND_URL', process.env.FRONTEND_URL)
-
-// CORS
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -62,7 +59,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/event', eventRoutes)
 app.use('/api/notification', notificationRoutes)
 app.use('/api/dashboard', dashboardRoutes)
-
 
 //undefined routes
 app.all('*', (req, res, next) => {

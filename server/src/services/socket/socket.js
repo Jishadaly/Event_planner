@@ -2,8 +2,7 @@ const { Server } = require("socket.io");
 
 module.exports = function socketServer(httpServer) {
 
-    const io = new Server(httpServer, { cors: { origin: "*" } });
-
+    const io = new Server(httpServer, { cors: { origin: process.env.FRONTEND_URL } });
     const eventRooms = new Map(); // eventId -> Set(userIds)
 
     io.on("connection", (socket) => {

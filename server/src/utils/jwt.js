@@ -4,10 +4,12 @@ const jwt = require('jsonwebtoken');
 exports.createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
+  console.log(typeof(process.env.NODE_ENV === "devolopment"))
+
   const options = {
     httpOnly: true,
-    secure: true,       // must be true in production (Vercel uses HTTPS)
-    sameSite: "None",   // required for cross-domain cookies
+    secure: true,       
+    sameSite: "None",  
     maxAge: 5 * 24 * 60 * 60 * 1000,
   };
   res.cookie('sessionToken', token, options);

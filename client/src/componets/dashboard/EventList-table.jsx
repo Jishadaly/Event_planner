@@ -1,18 +1,11 @@
 import { Card } from "../ui/Card"
 import { Button } from "../ui/Button"
+import { useNavigate } from "react-router-dom"
 
 export default function EventListTable({ events }) {
-
+  const navigate = useNavigate()
   if (!events) return
-  console.log(events)
-  // const events = [
-  //   { id: 1, title: "React Workshop", organizer: "Tech Academy", participants: 32, status: "upcoming" },
-  //   { id: 2, title: "Web Dev Bootcamp", organizer: "Code Masters", participants: 28, status: "upcoming" },
-  //   { id: 3, title: "AI Summit", organizer: "AI Global", participants: 45, status: "ongoing" },
-  //   { id: 4, title: "Design Workshop", organizer: "Design Pro", participants: 19, status: "finished" },
-  // ]
 
-  console.log(events[0].title.split(' ').length)
   return (
     <Card className="p-6">
       <h3 className="mb-6 text-lg font-semibold">Recent Events</h3>
@@ -46,7 +39,7 @@ export default function EventListTable({ events }) {
                   </span>
                 </td>
                 <td className="py-3 px-3">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => navigate(`/events/${event._id}`)}>
                     View
                   </Button>
                 </td>
@@ -55,6 +48,6 @@ export default function EventListTable({ events }) {
           </tbody>
         </table>
       </div>
-    </Card>
+    </Card >
   )
 }

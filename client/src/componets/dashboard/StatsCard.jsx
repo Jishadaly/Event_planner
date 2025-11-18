@@ -11,7 +11,7 @@ export default function StatsCard({ title, count, icon, iconBg = "bg-blue-100 da
                 </div>
                 <div className={`rounded-lg p-3 ${iconBg}`}>
                     {icon && (
-                        <div className={iconColor}>
+                        <div className={`h-5 w-5 ${iconColor}`}>
                             {icon}
                         </div>
                     )}

@@ -5,12 +5,8 @@ const { deleteFromCloudinary } = require('../utils/cloud.utils');
 const { updateById, findById, createDoc } = require('../utils/db.utils');
 
 
-/**
- * Get all events with filters and pagination
- */
 exports.getAllEvents = async (queryParams) => {
-    const { status, search, page = 1, limit = 10, sortBy = '-startTime', category } = queryParams;
-
+    const { status, search, page = 1, limit = 2, sortBy = '-startTime', category } = queryParams;
 
     const query = {};
 
@@ -48,9 +44,7 @@ exports.getAllEvents = async (queryParams) => {
     };
 };
 
-/**
- * Get single event by ID
- */
+
 exports.getEventById = async (id) => {
     const event = await Event.findById(id)
         .populate('organizer', 'name email avatar')
@@ -63,9 +57,7 @@ exports.getEventById = async (id) => {
     return event;
 };
 
-/**
- * Create new event
- */
+
 exports.createEvent = async (eventData, userId) => {
     console.log(eventData, 'event data')
     const event = await createDoc(Event, {
@@ -79,9 +71,6 @@ exports.createEvent = async (eventData, userId) => {
     return event.populate('organizer', 'name email avatar');
 };
 
-/**
- * Update event
- */
 exports.updateEvent = async (id, updateData, userId, userRole) => {
     let event = await findById(Event, id)
 
@@ -100,9 +89,6 @@ exports.updateEvent = async (id, updateData, userId, userRole) => {
     return event.populate('organizer', 'name email avatar');
 };
 
-/**
- * Delete event
- */
 exports.deleteEvent = async (id, userId, userRole) => {
     const event = await Event.findById(id);
 
@@ -124,9 +110,6 @@ exports.deleteEvent = async (id, userId, userRole) => {
     return { message: 'Event deleted successfully' };
 };
 
-/**
- * Add participant to event
- */
 exports.addParticipant = async (eventId, userId) => {
     const event = await Event.findById(eventId);
 
@@ -157,9 +140,7 @@ exports.addParticipant = async (eventId, userId) => {
 
 };
 
-/**
- * Remove participant from event
- */
+
 exports.removeParticipant = async (eventId, userId) => {
     const event = await Event.findById(eventId)
         .populate('participants.user', 'name email avatar')
@@ -186,10 +167,6 @@ exports.removeParticipant = async (eventId, userId) => {
     };
 };
 
-
-/**
- * Get events by user (as organizer or participant)
- */
 exports.getUserEvents = async (userId, role) => {
     const query = role === 'organizer'
         ? { organizer: userId }
@@ -200,9 +177,6 @@ exports.getUserEvents = async (userId, role) => {
         .sort('-startTime');
 };
 
-/**
- * Get upcoming events that need reminders
- */
 exports.getEventsForReminders = async () => {
     const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000);
     const now = new Date();

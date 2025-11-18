@@ -33,7 +33,6 @@ export default function EventDetailsPage() {
     const joinedParticipants = event?.participants?.filter((p) => p.status === "joined") || []
     const isJoined = event?.participants?.some((p) => p.user.id === user._id)
 
-
     useEffect(() => {
         if (!socket) return;
         if (!event?._id) return;
@@ -51,8 +50,6 @@ export default function EventDetailsPage() {
         };
     }, [socket, showChat, event]);
 
-
-
     const handleJoin = () => {
         joinMutation.mutate(id, {
             onSuccess: () => {
@@ -67,7 +64,7 @@ export default function EventDetailsPage() {
         leaveMutation.mutate(id, {
             onSuccess: () => {
                 refetchEvent()
-                toast("success", "You Left the Event", "You're no longer a participant.")
+                toast("info", "You Left the Event", "You're no longer a participant.")
 
             }
         })

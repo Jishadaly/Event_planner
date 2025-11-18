@@ -8,7 +8,7 @@ import NotificationItem from "./NotificationItem";
 
 export default function NotificationsPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const { notifications, isLoading, error, refetchNotifcation } = useNotification();
+  const { notifications, refetchNotifcation } = useNotification();
   const { toast } = useToast();
 
   const deleteNotif = useDeleteNotification();
@@ -28,7 +28,6 @@ export default function NotificationsPanel() {
     deleteNotif.mutate(id, {
       onSuccess: () => {
         refetchNotifcation();
-        toast('success', 'Deleted', 'Notification deleted successfully');
       },
       onError: (err) => {
         console.error("Delete failed:", err);
@@ -61,7 +60,6 @@ export default function NotificationsPanel() {
         )}
       </button>
 
-      {/* Notifications Panel with animation */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

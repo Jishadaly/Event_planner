@@ -4,7 +4,7 @@ const app = require('./app');
 const connectDB = require('./config/database');
 const socketServer = require('./services/socket/socket')
 
-//uncaught exceptions
+//sync exceptions
 process.on('uncaughtException', (err) => {
     console.error('UNCAUGHT EXCEPTION! Shutting down...');
     console.error(err.name, err.message);
@@ -19,7 +19,6 @@ app.set('io',io)
 
 //crone
 require('./utils/cronJobs');
-
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

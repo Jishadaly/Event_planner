@@ -72,10 +72,8 @@ module.exports = {
       <p style="margin-top:20px">Thanks,<br />Event Planner Team</p>
     </div>
   `,
-
-  // --------------------------------------------------
+ 
   // DAILY DIGEST (Next-day events)
-  // --------------------------------------------------
   dailyDigest: ({ user, events }) => `
     <div style="font-family:Arial;padding:20px;color:#333">
       <h2 style="color:#4a90e2">📅 Your Events for Tomorrow</h2>

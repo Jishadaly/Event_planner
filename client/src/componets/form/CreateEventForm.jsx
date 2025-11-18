@@ -98,7 +98,7 @@ export default function CreateEventForm({ onClose }) {
         setImagePreview(null);
     };
 
-    const CATEGORIES = ["All", "Technology", "Education", "Conference", "Networking", "Workshop", "Meeting"]
+    const CATEGORIES = ["Technology", "Education", "Conference", "Networking", "Workshop", "Meeting"]
 
 
     return (

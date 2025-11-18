@@ -1,4 +1,4 @@
-
+//dummy datas to buld ui
 const statsData = [
     {
         title: "Total Events",

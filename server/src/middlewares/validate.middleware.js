@@ -1,15 +1,10 @@
 const AppError = require('../utils/AppError');
 
-/**
- * Validate event creation/update
- */
 exports.validateEvent = (req, res, next) => {
   const { title, description, category, startTime, endTime, location } = req.body;
 
   const errors = [];
-  console.log(req.body)
-
-  // Validate required fields for creation
+  
   if (req.method === 'POST') {
     if (!title) errors.push('Title is required');
     if (!description) errors.push('Description is required');
@@ -19,7 +14,7 @@ exports.validateEvent = (req, res, next) => {
     if (!location) errors.push('Location is required');
   }
 
-  // Validate date logic
+
   if (startTime && endTime) {
     const start = new Date(startTime);
     const end = new Date(endTime);
@@ -40,18 +35,16 @@ exports.validateEvent = (req, res, next) => {
     }
   }
 
-  // Validate category
+
   const validCategories = ["Technology", "Education", "Conference", "Networking", "Workshop", "meeting"]
   if (category && !validCategories.includes(category)) {
     errors.push(`Category must be one of: ${validCategories.join(', ')}`);
   }
 
-  // Validate title length
   if (title && title.length > 100) {
     errors.push('Title cannot exceed 100 characters');
   }
 
-  // Validate description length
   if (description && description.length > 2000) {
     errors.push('Description cannot exceed 2000 characters');
   }
@@ -81,7 +74,7 @@ exports.validateFiles = (req, res, next) => {
 
   const errors = [];
 
-  // 🔹 Validate image (optional, but check if provided)
+
   if (image) {
     if (!allowedImageTypes.includes(image.mimetype)) {
       errors.push('Only JPEG, JPG, or PNG images allowed for event image.');
@@ -91,7 +84,7 @@ exports.validateFiles = (req, res, next) => {
     }
   }
 
-  // 🔹 Validate attachments (optional)
+
   attachments.forEach((file) => {
     if (!allowedFileTypes.includes(file.mimetype)) {
       errors.push(`File ${file.originalname} has an unsupported format.`);
@@ -109,9 +102,6 @@ exports.validateFiles = (req, res, next) => {
 };
 
 
-/**
- * Validate user registration
- */
 exports.validateRegistration = (req, res, next) => {
   const { name, email, password, role } = req.body;
 
@@ -141,9 +131,7 @@ exports.validateRegistration = (req, res, next) => {
   next();
 };
 
-/**
- * Validate login
- */
+
 exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
 

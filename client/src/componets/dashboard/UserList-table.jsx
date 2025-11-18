@@ -16,7 +16,7 @@ export default function UserListTable({ users }) {
               <th className="text-left py-2 px-3 font-semibold">Email</th>
               <th className="text-left py-2 px-3 font-semibold">Role</th>
               {/* <th className="text-left py-2 px-3 font-semibold">Events</th> */}
-              <th className="text-left py-2 px-3 font-semibold">Action</th>
+              {/* <th className="text-left py-2 px-3 font-semibold">Action</th> */}
             </tr>
           </thead>
           <tbody>
@@ -35,11 +35,11 @@ export default function UserListTable({ users }) {
                   </span>
                 </td>
                 {/* <td className="py-3 px-3">{user.events}</td> */}
-                <td className="py-3 px-3">
+                {/* <td className="py-3 px-3">
                   <Button variant="outline" size="sm">
                     View
                   </Button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

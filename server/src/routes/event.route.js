@@ -3,16 +3,11 @@ const eventController = require('../controllers/event.controller');
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const { validateEvent, validateFiles } = require('../middlewares/validate.middleware');
 const upload = require('../middlewares/upload.middleware');
-
 const router = express.Router();
 
-// Protect all routes
 router.use(protect);
 
-// Get user's events
 router.get('/my-events', eventController.getMyEvents);
-
-
 router
     .route('/')
     .get(eventController.getAllEvents)
@@ -35,7 +30,6 @@ router
     )
     .delete(restrictTo('admin', 'organizer'), eventController.deleteEvent);
 
-// Participant management
 router.post('/:id/join', eventController.joinEvent);
 router.post('/:id/leave', eventController.leaveEvent);
 

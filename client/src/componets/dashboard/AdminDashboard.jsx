@@ -1,4 +1,3 @@
-import { Users, CalendarIcon, TrendingUp, Activity } from "lucide-react"
 import CalendarSection from "./CalenderSection"
 import EventListTable from "./EventList-table"
 import UserListTable from "./UserList-table"
@@ -13,7 +12,7 @@ import PageLoader from "../common/PageLoader"
 
 export default function AdminDashboard() {
 
-    const { dashboardData, isLoading, error, refetchDashboard } = useAdminDashboard();
+    const { dashboardData, isLoading, error } = useAdminDashboard();
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error loading dashboard</div>;
@@ -30,7 +29,7 @@ export default function AdminDashboard() {
 
     const mergedStats = statsData?.map(item => ({
         ...item,
-        ...statsUIConfig[item.title]   // attach icon + bg + color based on title
+        ...statsUIConfig[item.title]
     }));
 
 

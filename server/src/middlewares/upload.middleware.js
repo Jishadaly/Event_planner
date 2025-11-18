@@ -1,9 +1,7 @@
 const multer = require('multer');
 
-// Store files in memory (so you can upload to S3)
 const storage = multer.memoryStorage();
 
-// Allow multiple file types (images, PDFs, docs, etc.)
 const fileFilter = (req, file, cb) => {
   const allowedTypes = [
     'image/jpeg',

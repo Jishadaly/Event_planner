@@ -5,7 +5,7 @@ import { useToast } from './ToastContext'
 const SocketContext = createContext(null)
 
 export const SocketProvider = ({ children, userId }) => {
-    const socketRef = useRef(null)
+
     const [socket, setSocket] = useState(null)
     const { toast } = useToast()
 
@@ -18,8 +18,7 @@ export const SocketProvider = ({ children, userId }) => {
             query: { userId }
         })
 
-        socketRef.current = newSocket
-        setSocket(newSocket) 
+        setSocket(newSocket)
 
         // Event created
         newSocket.on("event:created", ({ event }) => {
@@ -28,7 +27,7 @@ export const SocketProvider = ({ children, userId }) => {
 
         // Event updated
         newSocket.on("event:updated", (event) => {
-            toast('success', `Event Updated: ${event.title}`,'Check now Whats new!!');
+            toast('success', `Event Updated: ${event.title}`, 'Check now Whats new!!');
         });
 
         // User joined event
