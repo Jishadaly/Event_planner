@@ -66,8 +66,6 @@ exports.createEvent = async (eventData, userId) => {
         participants: [{ user: userId, status: "joined", joinedAt: new Date() }],
     })
 
-    console.log(event)
-
     return event.populate('organizer', 'name email avatar');
 };
 

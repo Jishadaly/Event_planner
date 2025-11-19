@@ -108,11 +108,6 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
         req.user.role
     );
 
-    // Emit socket event for event deletion
-    if (req.app.get('io')) {
-        req.app.get('io').emit('event:deleted', { eventId: req.params.id });
-    }
-
     res.status(204).json({
         status: 'success',
         message: "deleted event succefully",
@@ -126,8 +121,6 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         req.user._id.toString()
     );
 
-
-    // Send notification to organizer
     await sendNotification(event.organizer, {
         title: "New Participant Joined",
         message: `${req.user.name} joined your event "${event.title}".`,
@@ -135,13 +128,11 @@ exports.joinEvent = asyncHandler(async (req, res, next) => {
         event: event._id,
     });
 
-    const io = getIo(req)
-
+    const io = getIo(req);
     if (io) {
         const payload = { user, eventName: event.title }
         emitSocketEvent(io, event?.organizer?._id?.toString(), "event:participant-joined", payload)
     }
-
 
     res.status(200).json({
         status: 'success',

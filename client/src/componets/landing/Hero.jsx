@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "../ui/Button"
 
 export default function Hero() {
@@ -13,7 +13,7 @@ export default function Hero() {
                 </div>
 
                 {/* Headline */}
-                <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-foreground" onClick={()=> navigate('/dashboard')}>
+                <h1 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-foreground" onClick={() => navigate('/dashboard')}>
                     Connect, Collaborate, Create Events
                 </h1>
 
@@ -25,13 +25,13 @@ export default function Hero() {
 
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/register">
-                        <Button size="lg" className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
-                            Get Started Free
-                        </Button>
-                    </Link>
+
+                    <Button size="lg" className="bg-primary hover:bg-primary/90 w-full sm:w-auto" onClick={()=> navigate('/dashboard')}>
+                        Get Started Free
+                    </Button>
+
                     <Link href="#features">
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent">
+                        <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent" >
                             Learn More
                         </Button>
                     </Link>

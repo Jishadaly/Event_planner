@@ -14,7 +14,7 @@ export default function AdminDashboard() {
 
     const { dashboardData, isLoading, error } = useAdminDashboard();
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <PageLoader />
     if (error) return <div>Error loading dashboard</div>;
 
     const {
@@ -32,9 +32,6 @@ export default function AdminDashboard() {
         ...statsUIConfig[item.title]
     }));
 
-
-    if (isLoading) return <PageLoader />
-    if (error) return <div>Error loading dashboard</div>;
 
     return (
         <div className="space-y-10">

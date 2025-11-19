@@ -1,10 +1,7 @@
 const Notification = require("../models/Notification.model");
 const asyncHandler = require("../utils/asyncHandler");
 
-/**
- * @desc  Get loged user notifications
- * @route GET /api/notifications
- */
+
 exports.getMyNotifications = asyncHandler(async (req, res) => {
   const notifications = await Notification.find({ user: req.user._id })
     .sort({ createdAt: -1 });
@@ -16,10 +13,7 @@ exports.getMyNotifications = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @desc  Mark single notification as read
- * @route PATCH /api/notifications/:id/read
- */
+
 exports.markAsRead = asyncHandler(async (req, res) => {
   const notification = await Notification.findOneAndUpdate(
     { _id: req.params.id, user: req.user._id },
@@ -33,10 +27,7 @@ exports.markAsRead = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @desc  Mark user all notifications as read 
- * @route PATCH /api/notifications/read-all
- */
+
 exports.markAllAsRead = asyncHandler(async (req, res) => {
   await Notification.updateMany(
     { user: req.user._id },
@@ -49,10 +40,7 @@ exports.markAllAsRead = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @desc  Delete a notification 
- * @route DELETE /api/notifications/:id
- */
+
 exports.deleteNotification = asyncHandler(async (req, res) => {
   await Notification.deleteOne({
     _id: req.params.id,
@@ -65,10 +53,7 @@ exports.deleteNotification = asyncHandler(async (req, res) => {
   });
 });
 
-/**
- * @desc  clear all notifications
- * @route DELETE /api/notifications/clear-all
- */
+
 exports.deleteAllNotification = asyncHandler(async (req, res) => {
   
   await Notification.deleteMany({
