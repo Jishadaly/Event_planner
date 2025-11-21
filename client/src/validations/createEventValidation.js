@@ -31,6 +31,7 @@ export const createEventSchema = Yup.object().shape({
 
   image: Yup.mixed()
     .nullable()
+    .required('image is required')
     .test("fileType", "Only JPG, PNG, or WEBP images are allowed", (value) => {
       if (!value) return true; // optional field
       return SUPPORTED_IMAGE_TYPES.includes(value.type);

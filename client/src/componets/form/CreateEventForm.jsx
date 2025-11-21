@@ -60,6 +60,7 @@ export default function CreateEventForm({ onClose }) {
         if (!file) return;
         setFormData((prev) => ({ ...prev, image: file }));
         setImagePreview(URL.createObjectURL(file));
+        clearError('image')
     };
 
     const handleSubmit = async (e) => {
@@ -96,6 +97,8 @@ export default function CreateEventForm({ onClose }) {
     const removeImage = () => {
         setFormData((prev) => ({ ...prev, image: null }));
         setImagePreview(null);
+        clearError('image')
+        
     };
 
     const CATEGORIES = ["Technology", "Education", "Conference", "Networking", "Workshop", "Meeting"]
