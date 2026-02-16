@@ -30,14 +30,14 @@ export default function EventDetailsPage() {
     const { toast } = useToast()
     const socket = useSocket()
 
-    const joinedParticipants = event?.participants?.filter((p) => p.status === "joined") || []
-    const isJoined = event?.participants?.some((p) => p.user.id === user._id)
+    const joinedParticipants = event?.participants?.filter((p) => p?.status === "joined") || []
+    const isJoined = event?.participants?.some((p) => p?.user?.id === user?._id)
 
     useEffect(() => {
         if (!socket) return;
         if (!event?._id) return;
 
-        const eventId = event._id;
+        const eventId = event?._id;
 
         if (showChat) {
             socket.emit("join-event-room", eventId);
@@ -161,7 +161,7 @@ export default function EventDetailsPage() {
                             <div className="space-y-4">
                                 <div>
                                     <p className="text-sm text-muted-foreground mb-2">Participants</p>
-                                    <p className="text-2xl font-bold">{joinedParticipants.length}</p>
+                                    <p className="text-2xl font-bold">{joinedParticipants?.length}</p>
                                 </div>
 
                                 {!isJoined ? (
